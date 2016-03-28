@@ -1,0 +1,156 @@
+﻿<Window x:Class="NetmfPackInstaller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:NetmfPackInstaller"
+        Title="CMSIS-Pack Viewer"
+        Height="600"
+        Width="800">
+    <Window.Resources>
+        <!-- Higlight pre-release packs in red/italic font -->
+        <Style TargetType="{x:Type DataGridRow}"
+               BasedOn="{StaticResource {x:Type DataGridRow}}">
+            <Setter Property="FontStyle"
+                    Value="Normal" />
+            <Setter Property="Foreground"
+                    Value="Black" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Version.IsPrerelease}"
+                             Value="True">
+                    <Setter Property="FontStyle"
+                            Value="Italic" />
+                    <Setter Property="Foreground"
+                            Value="Red" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Trigger appearance of indeterminate progress while loading the index from the source URL -->
+        <Style x:Key="IndexLoadProgressStyle"
+               TargetType="{x:Type ProgressBar}">
+            <Setter Property="Visibility"
+                    Value="Visible" />
+            <Setter Property="Orientation"
+                    Value="Horizontal" />
+            <Setter Property="Width"
+                    Value="120" />
+            <Setter Property="Height"
+                    Value="15" />
+            <Setter Property="IsIndeterminate"
+                    Value="True" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding State}"
+                             Value="Ready">
+                    <Setter Property="Visibility"
+                            Value="Collapsed" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Grouping collection view to group the Packs by Vendor-->
+        <CollectionViewSource x:Key="VendorGroupViewSource"
+                              Source="{Binding Packs}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="Vendor" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+
+        <!-- Expandalbe group container for vendor groups-->
+        <Style x:Key="VendorGroupContainerStyle"
+               TargetType="{x:Type GroupItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GroupItem}">
+                        <Expander IsExpanded="True">
+                            <Expander.Header>
+                                <Grid>
+                                    <ContentPresenter />
+                                </Grid>
+                            </Expander.Header>
+                            <ItemsPresenter />
+                        </Expander>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Header template for the Vendor group to show "<Vendor> # Pack(s)"-->
+        <DataTemplate x:Key="VendorGroupHeaderTemplate"
+                      DataType="GroupItem">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Padding="2"
+                           Text="{Binding Name}" />
+                <TextBlock Padding="2"
+                           Text="{Binding ItemCount}" />
+                <TextBlock Padding="2"
+                           Text="Pack(s)" />
+            </StackPanel>
+        </DataTemplate>
+        <Style x:Key="ToolBarOverflowButtonStyle"
+               TargetType="{x:Type ToggleButton}">
+            <Setter Property="OverridesDefaultStyle"
+                    Value="true" />
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+        <Style x:Key="ImageButton" TargetType="{x:Type Button}">
+            <Setter Property="Opacity"
+                    Value="1.0"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Self},Path=IsEnabled}" Value="false">
+                    <Setter Property="Opacity" Value="0.5"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <ToolBarPanel DockPanel.Dock="Top"
+                      Orientation="Horizontal">
+            <ToolBar ToolBarTray.IsLocked="True" Loaded="ToolBar_Loaded">
+                <Button ToolBar.OverflowMode="Never"
+                        Style="{StaticResource ImageButton}"
+                        Command="{Binding RefreshIndexCommand}">
+                    <Image Source="Refresh.png"
+                           Stretch="None" />
+                </Button>
+            </ToolBar>
+        </ToolBarPanel>
+        <StatusBar DockPanel.Dock="Bottom"
+                   Height="Auto">
+            <StatusBarItem DockPanel.Dock="Right">
+                <TextBlock Text="{Binding LastUpdated, StringFormat=Last Updated: \{0:g\}}" />
+            </StatusBarItem>
+            <TextBlock Text="{Binding State, Converter={local:LoadStateConverter}}" />
+            <Separator />
+            <ProgressBar Style="{StaticResource ResourceKey=IndexLoadProgressStyle}" />
+        </StatusBar>
+        <DataGrid AutoGenerateColumns="False"
+                  ItemsSource="{Binding Source={StaticResource VendorGroupViewSource}}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Vendor"
+                                    Width="SizeToCells"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Vendor}" />
+                <DataGridTextColumn Header="Name"
+                                    Width="SizeToCells"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Version"
+                                    Width="SizeToCells"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Version}" />
+                <DataGridTextColumn Header="InstallState"
+                                    Width="SizeToCells"
+                                    IsReadOnly="True"
+                                    Binding="{Binding InstallState}" />
+                <DataGridTextColumn Header="Description"
+                                    Width="SizeToCells"
+                                    IsReadOnly="True"
+                                    Binding="{Binding Description}" />
+            </DataGrid.Columns>
+            <DataGrid.GroupStyle>
+                <GroupStyle ContainerStyle="{StaticResource VendorGroupContainerStyle}"
+                            HeaderTemplate="{StaticResource VendorGroupHeaderTemplate}" />
+            </DataGrid.GroupStyle>
+        </DataGrid>
+    </DockPanel>
+</Window>
