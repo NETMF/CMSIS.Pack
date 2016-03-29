@@ -81,7 +81,7 @@ namespace CMSIS.Pack.PackDescription
                 retVal.SupportContact = pkgElement.Element( "supportContact" )?.Value;
                 retVal.License = pkgElement.Element( "license" )?.Value;
 
-                ParseElements( pkgElement.Element( "releases" ), "release", retVal.Keywords, Keyword.ParseFrom );
+                ParseElements( pkgElement.Element( "releases" ), "release", retVal.Releases, Release.ParseFrom );
                 ParseElements( pkgElement.Element( "keywords" ), "keyword", retVal.Keywords, Keyword.ParseFrom );
                 ParseElements( pkgElement.Element( "generators" ), "generator", retVal.Generators, Generator.ParseFrom );
                 ParseElements( pkgElement.Element( "devices" ), "family", retVal.Devices, DeviceFamily.ParseFrom );
@@ -89,7 +89,7 @@ namespace CMSIS.Pack.PackDescription
                 ParseElements( pkgElement.Element( "taxonomy" ), "description", retVal.Taxonomy, TaxonomyDescription.ParseFrom );
                 ParseElements( pkgElement.Element( "apis" ), "api", retVal.Apis, Api.ParseFrom );
                 ParseElements( pkgElement.Element( "conditions" ), "condition", retVal.Conditions, Condition.ParseFrom );
-                ParseElements( pkgElement.Element( "examples" ), "example", retVal.Conditions, Condition.ParseFrom );
+                ParseElements( pkgElement.Element( "examples" ), "example", retVal.Examples, Example.ParseFrom );
                 // TODO: figure out plan to deal with multiple child element types in components element (component, bundle)
                 ParseElements( pkgElement.Element( "components" ), "component", retVal.Components, Component.ParseFrom );
 

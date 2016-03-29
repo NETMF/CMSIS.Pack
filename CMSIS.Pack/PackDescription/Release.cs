@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
 
 namespace CMSIS.Pack.PackDescription
 {
     public class Release
     {
+        public SemanticVersion Version { get; set; }
+        public string Description { get; set; }
 
         public static Release ParseFrom( XElement release )
         {
-            return new Release();
+            return new Release()
+                { Version = SemanticVersion.Parse( release.Attribute("version").Value )
+                , Description = release.Value
+                };
         }
     }
 }

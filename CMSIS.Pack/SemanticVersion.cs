@@ -246,7 +246,7 @@ namespace CMSIS.Pack
         /// portion of the version is included or not. The Build Metadata is the only portion of the semantic 
         /// version that does not participate in precedence evaluation for comparing versions. 
         /// </remarks>
-        public string ToString( bool includeBuildMetadata)
+        public string ToString( bool includeBuildMetadata )
         {
             var bldr = new StringBuilder( string.Format( CultureInfo.InvariantCulture, "{0}.{1}.{2}", Major, Minor, Patch ) );
             if( PreReleaseParts.Count > 0 )
