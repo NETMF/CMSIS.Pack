@@ -61,12 +61,15 @@
     <Compile Include="PackDescription\DebugAccessSequence.cs" />
     <Compile Include="PackDescription\DeviceFamily.cs" />
     <Compile Include="PackDescription\Example.cs" />
+    <Compile Include="PackDescription\File.cs" />
     <Compile Include="PackDescription\Generator.cs" />
     <Compile Include="PackDescription\Keywords.cs" />
     <Compile Include="PackDescription\Package.cs" />
     <Compile Include="PackDescription\Parsers.cs" />
+    <Compile Include="PackDescription\PDSCNames.cs" />
     <Compile Include="PackDescription\Release.cs" />
     <Compile Include="PackDescription\TaxonomyDescription.cs" />
+    <Compile Include="PackDescription\XElementExtensions.cs" />
     <Compile Include="PackIndexEntry.cs" />
     <Compile Include="PackIndex.cs" />
     <Compile Include="PackInstallProgress.cs" />

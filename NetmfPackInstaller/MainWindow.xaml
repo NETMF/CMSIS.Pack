@@ -54,7 +54,7 @@
             </CollectionViewSource.GroupDescriptions>
         </CollectionViewSource>
 
-        <!-- Expandalbe group container for vendor groups-->
+        <!-- Expandable group container for vendor groups-->
         <Style x:Key="VendorGroupContainerStyle"
                TargetType="{x:Type GroupItem}">
             <Setter Property="Template">

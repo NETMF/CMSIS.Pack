@@ -17,68 +17,29 @@ namespace CMSIS.Pack
                 throw new ArgumentNullException( nameof( details ) );
 
             Repository = repository;
-            Details_ = details;
+            Details = details;
             InstallState = installState;
         }
 
-        public IPackIndexEntry Details
-        {
-            get { return Details_; }
-        }
-        private readonly IPackIndexEntry Details_;
+        public IPackIndexEntry Details { get; }
 
         public IRepository Repository { get; private set; }
 
         public PackInstallState InstallState { get; private set; }
         
-        public string PackName
-        {
-            get { return Details_.PackName; }
-        }
-
-        public string Vendor
-        {
-            get { return Details_.Vendor; }
-        }
-
-        public string Name
-        {
-            get { return Details_.Name; }
-        }
-
-        public string PdscName
-        {
-            get { return Details_.PdscName; }
-        }
-
-        public Uri PdscUrl
-        {
-            get { return Details_.PdscUrl; }
-        }
-
-        public Uri PackUrl
-        {
-            get { return Details_.PackUrl; }
-        }
-
-        public Uri Url
-        {
-            get { return Details_.Url; }
-        }
-
-        public string LocalPath
-        {
-            get { return Details_.LocalPath; }
-        }
-
-        public SemanticVersion Version
-        {
-            get { return Details_.Version; }
-        }
+        public string PackName => Details.PackName;
+        public string Vendor => Details.Vendor;
+        public string Name => Details.Name;
+        public string PdscName => Details.PdscName;
+        public Uri PdscUrl => Details.PdscUrl;
+        public Uri PackUrl => Details.PackUrl;
+        public Uri Url => Details.Url;
+        public string LocalPath => Details.LocalPath;
+        public SemanticVersion Version => Details.Version;
 
         public async Task<string> GetPackageDescriptionDocumentAsync( )
         {
-            using( var strm = File.OpenText( Path.Combine( Repository.WebRoot, PdscName ) ) )
+            using( var strm = System.IO.File.OpenText( Path.Combine( Repository.WebRoot, PdscName ) ) )
             {
                 return await strm.ReadToEndAsync( );
             }

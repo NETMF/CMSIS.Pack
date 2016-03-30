@@ -22,7 +22,7 @@ namespace CMSIS.Pack.PackDescription
         public Package(  )
         {
             Releases = new List<Release>();
-            Keywords = new List<Keyword>();
+            Keywords = new List<string>();
             Generators = new List<Generator>();
             Devices = new List<DeviceFamily>();
             Boards = new List<Board>();
@@ -42,7 +42,7 @@ namespace CMSIS.Pack.PackDescription
         public string License { get; set; }
 
         public IList<Release> Releases { get; }
-        public IList<Keyword> Keywords { get; }
+        public IList<string> Keywords { get; }
         public IList<Generator> Generators { get; }
         public IList<DeviceFamily> Devices { get; }
         public IList<Board> Boards { get; }
@@ -72,39 +72,29 @@ namespace CMSIS.Pack.PackDescription
             return Task.Run( ( ) =>
             {
                 var retVal = new Package( );
-                var pkgElement = doc.Element( "package" );
+                var pkgElement = doc.Element( ElementNames.Package );
 
-                retVal.Name = pkgElement.Element( "name" ).Value;
-                retVal.Vendor = pkgElement.Element( "vendor" ).Value;
-                retVal.Description = pkgElement.Element( "description" ).Value;
-                retVal.Url = new Uri( pkgElement.Element( "url" ).Value );
-                retVal.SupportContact = pkgElement.Element( "supportContact" )?.Value;
-                retVal.License = pkgElement.Element( "license" )?.Value;
+                retVal.Name = pkgElement.Element( ElementNames.Name ).Value;
+                retVal.Vendor = pkgElement.Element( ElementNames.Vendor ).Value;
+                retVal.Description = pkgElement.Element( ElementNames.Description ).Value;
+                retVal.Url = new Uri( pkgElement.Element( ElementNames.Url ).Value );
+                retVal.SupportContact = pkgElement.Element( ElementNames.SupportContact )?.Value;
+                retVal.License = pkgElement.Element( ElementNames.License )?.Value;
 
-                ParseElements( pkgElement.Element( "releases" ), "release", retVal.Releases, Release.ParseFrom );
-                ParseElements( pkgElement.Element( "keywords" ), "keyword", retVal.Keywords, Keyword.ParseFrom );
-                ParseElements( pkgElement.Element( "generators" ), "generator", retVal.Generators, Generator.ParseFrom );
-                ParseElements( pkgElement.Element( "devices" ), "family", retVal.Devices, DeviceFamily.ParseFrom );
-                ParseElements( pkgElement.Element( "boards" ), "board", retVal.Boards, Board.ParseFrom );
-                ParseElements( pkgElement.Element( "taxonomy" ), "description", retVal.Taxonomy, TaxonomyDescription.ParseFrom );
-                ParseElements( pkgElement.Element( "apis" ), "api", retVal.Apis, Api.ParseFrom );
-                ParseElements( pkgElement.Element( "conditions" ), "condition", retVal.Conditions, Condition.ParseFrom );
-                ParseElements( pkgElement.Element( "examples" ), "example", retVal.Examples, Example.ParseFrom );
+                pkgElement.Element( ElementNames.Releases   ).ParseCollectionElements( ElementNames.Release    , retVal.Releases  , Release.ParseFrom );
+                pkgElement.Element( ElementNames.Keywords   ).ParseCollectionElements( ElementNames.Keyword    , retVal.Keywords  , Keyword.ParseFrom );
+                pkgElement.Element( ElementNames.Generators ).ParseCollectionElements( ElementNames.Generator  , retVal.Generators, Generator.ParseFrom );
+                pkgElement.Element( ElementNames.Devices    ).ParseCollectionElements( ElementNames.Family     , retVal.Devices   , DeviceFamily.ParseFrom );
+                pkgElement.Element( ElementNames.Boards     ).ParseCollectionElements( ElementNames.Board      , retVal.Boards    , Board.ParseFrom );
+                pkgElement.Element( ElementNames.Taxonomy   ).ParseCollectionElements( ElementNames.Description, retVal.Taxonomy  , TaxonomyDescription.ParseFrom );
+                pkgElement.Element( ElementNames.Apis       ).ParseCollectionElements( ElementNames.Api        , retVal.Apis      , Api.ParseFrom );
+                pkgElement.Element( ElementNames.Conditions ).ParseCollectionElements( ElementNames.Condition  , retVal.Conditions, Condition.ParseFrom );
+                pkgElement.Element( ElementNames.Examples   ).ParseCollectionElements( ElementNames.Example    , retVal.Examples  , Example.ParseFrom );
+                pkgElement.Element( ElementNames.Components ).ParseCollectionElements( ElementNames.Component  , retVal.Components, Component.ParseFrom );
                 // TODO: figure out plan to deal with multiple child element types in components element (component, bundle)
-                ParseElements( pkgElement.Element( "components" ), "component", retVal.Components, Component.ParseFrom );
 
                 return retVal;
             } );
-        }
-        static void ParseElements<T>( XElement containerElement, XName descendantName, IList<T> list, Func<XElement,T> parser )
-        {
-            if( containerElement == null )
-                return;
-
-            foreach( var element in containerElement.Descendants( descendantName ) )
-            {
-                list.Add( parser( element ) );
-            }
         }
     }
 }

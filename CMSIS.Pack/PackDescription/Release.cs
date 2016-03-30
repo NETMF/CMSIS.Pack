@@ -1,4 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
+using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
@@ -6,13 +8,20 @@ namespace CMSIS.Pack.PackDescription
     {
         public SemanticVersion Version { get; set; }
         public string Description { get; set; }
+        public DateTime Date { get; set; }
 
         public static Release ParseFrom( XElement release )
         {
-            return new Release()
-                { Version = SemanticVersion.Parse( release.Attribute("version").Value )
+            var retVal = new Release()
+                { Version = SemanticVersion.Parse( release.Attribute( AttributeNames.Version ).Value )
                 , Description = release.Value
                 };
+
+            var dateString = release.Attribute( AttributeNames.Date )?.Value;
+            if( !string.IsNullOrWhiteSpace( dateString ) )
+                retVal.Date = Parsers.DateTime.Parse( dateString );
+
+            return retVal;
         }
     }
 }
