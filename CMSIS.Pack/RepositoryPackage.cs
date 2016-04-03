@@ -39,7 +39,7 @@ namespace CMSIS.Pack
 
         public async Task<string> GetPackageDescriptionDocumentAsync( )
         {
-            using( var strm = System.IO.File.OpenText( Path.Combine( Repository.WebRoot, PdscName ) ) )
+            using( var strm = File.OpenText( Path.Combine( Repository.WebRoot, PdscName ) ) )
             {
                 return await strm.ReadToEndAsync( );
             }

@@ -30,20 +30,14 @@ namespace CMSIS.Pack
         }
 
         /// <summary>Enumeration of the Packs listed in the Index</summary>
-        public IEnumerable<IPackIndexEntry> Packs { get { return Packs_.AsReadOnly( ); } }
+        public IEnumerable<IPackIndexEntry> Packs => Packs_.AsReadOnly( );
         private readonly List<IPackIndexEntry> Packs_ = new List<IPackIndexEntry>();
 
         /// <summary>Download and parse the index file from the Default location <see cref="DefaultIndexUriPath"/></summary>
         /// <returns>Task for the Asynchronous operation</returns>
-        public Task LoadAsync( )
-        {
-            return LoadAsync( new Uri( DefaultIndexUriPath ) );
-        }
+        public Task LoadAsync( ) => LoadAsync( new Uri( DefaultIndexUriPath ) );
 
-        public Task LoadAsync( IProgress<FileDownloadProgress> progressSink )
-        {
-            return LoadAsync( new Uri( DefaultIndexUriPath ), progressSink );
-        }
+        public Task LoadAsync( IProgress<FileDownloadProgress> progressSink ) => LoadAsync( new Uri( DefaultIndexUriPath ), progressSink );
 
         /// <summary>Download and parse the index asynchronously from a URL</summary>
         /// <param name="indexUrl">URL of the index file to download</param>

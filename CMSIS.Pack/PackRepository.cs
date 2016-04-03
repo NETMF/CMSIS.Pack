@@ -24,10 +24,7 @@ namespace CMSIS.Pack
         {
         }
 
-        public DateTime LastUpdatedTimeUTC
-        {
-            get { return File.GetLastWriteTimeUtc( Path.Combine( LocalPath, "pack.idx" ) ); }
-        }
+        public DateTime LastUpdatedTimeUTC => File.GetLastWriteTimeUtc( Path.Combine( LocalPath, "pack.idx" ) );
 
         public string WebRoot { get; }
 
@@ -65,10 +62,7 @@ namespace CMSIS.Pack
             }
         }
 
-        public Task UpdateLocalFromSource( )
-        {
-            return Task.FromResult<object>( null );
-        }
+        public Task UpdateLocalFromSource( ) => Task.FromResult<object>( null );
 
         private Task<PackInstallState> GetInstallState( IPackIndexEntry pack )
         {
