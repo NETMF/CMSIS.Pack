@@ -98,7 +98,7 @@ namespace CMSIS.Pack
         public async Task<Package> GetPackageDescriptionAsync( )
         {
             var xml = await GetPackageDescriptionDocumentAsync( );
-            return await Package.ParseFromAsync( xml );
+            return await Package.ParseAsync( xml );
         }
 
         private static Uri CreateUriWithTrailingSeperator( string descriptorUri )

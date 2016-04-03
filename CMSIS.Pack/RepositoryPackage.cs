@@ -48,7 +48,7 @@ namespace CMSIS.Pack
         public async Task<Package> GetPackageDescriptionAsync( )
         {
             string content = await GetPackageDescriptionDocumentAsync( );
-            return await Package.ParseFromAsync( content );
+            return await Package.ParseAsync( content );
         }
 
         public async Task Download( IProgress<FileDownloadProgress> progressSink )

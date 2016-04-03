@@ -29,6 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,22 +55,69 @@
   <ItemGroup>
     <Compile Include="FileDownloadProgress.cs" />
     <Compile Include="Interfaces.cs" />
-    <Compile Include="PackDescription\Api.cs" />
-    <Compile Include="PackDescription\Board.cs" />
+    <Compile Include="PackDescription\AlgorithmType.cs" />
+    <Compile Include="PackDescription\ApiType.cs" />
+    <Compile Include="PackDescription\BoardBookCategoryEnum.cs" />
+    <Compile Include="PackDescription\BoardFeatureType.cs" />
+    <Compile Include="PackDescription\BoardReferenceType.cs" />
+    <Compile Include="PackDescription\BoardsBookType.cs" />
+    <Compile Include="PackDescription\BoardsDeviceType.cs" />
+    <Compile Include="PackDescription\BoardType.cs" />
+    <Compile Include="PackDescription\BoardTypeImage.cs" />
+    <Compile Include="PackDescription\BookType.cs" />
+    <Compile Include="PackDescription\Bundle.cs" />
+    <Compile Include="PackDescription\CompatibleDeviceType.cs" />
+    <Compile Include="PackDescription\CompilerEnumType.cs" />
+    <Compile Include="PackDescription\CompilerOutputType.cs" />
+    <Compile Include="PackDescription\CompileType.cs" />
+    <Compile Include="PackDescription\ComponenOrBundleGroup.cs" />
     <Compile Include="PackDescription\Component.cs" />
-    <Compile Include="PackDescription\Condition.cs" />
-    <Compile Include="PackDescription\DebugAccessSequence.cs" />
-    <Compile Include="PackDescription\DeviceFamily.cs" />
-    <Compile Include="PackDescription\Example.cs" />
-    <Compile Include="PackDescription\File.cs" />
-    <Compile Include="PackDescription\Generator.cs" />
-    <Compile Include="PackDescription\Keywords.cs" />
+    <Compile Include="PackDescription\ComponentCategoryType.cs" />
+    <Compile Include="PackDescription\ConditionType.cs" />
+    <Compile Include="PackDescription\DataPatchType.cs" />
+    <Compile Include="PackDescription\DebugConfigType.cs" />
+    <Compile Include="PackDescription\DebugInterfaceType.cs" />
+    <Compile Include="PackDescription\DebugPortType.cs" />
+    <Compile Include="PackDescription\DebugType.cs" />
+    <Compile Include="PackDescription\DebugVarsType.cs" />
+    <Compile Include="PackDescription\DescriptionType.cs" />
+    <Compile Include="PackDescription\DeviceFeatureType.cs" />
+    <Compile Include="PackDescription\DeviceType.cs" />
+    <Compile Include="PackDescription\DeviceTypeVariant.cs" />
+    <Compile Include="PackDescription\Enumerations.cs" />
+    <Compile Include="PackDescription\EnvironmentType.cs" />
+    <Compile Include="PackDescription\ExampleAttributesType.cs" />
+    <Compile Include="PackDescription\ExampleProjectTypeEnvironment.cs" />
+    <Compile Include="PackDescription\ExampleType.cs" />
+    <Compile Include="PackDescription\Family.cs" />
+    <Compile Include="PackDescription\FileAttributeType.cs" />
+    <Compile Include="PackDescription\FileCategoryType.cs" />
+    <Compile Include="PackDescription\FileType.cs" />
+    <Compile Include="PackDescription\FilterType.cs" />
+    <Compile Include="PackDescription\GeneratorCommandArgumentType.cs" />
+    <Compile Include="PackDescription\GeneratorDeviceSelectType.cs" />
+    <Compile Include="PackDescription\GeneratorFileType.cs" />
+    <Compile Include="PackDescription\GeneratorType.cs" />
+    <Compile Include="PackDescription\GeneratorTypeExtensions.cs" />
+    <Compile Include="PackDescription\GpdscFileType.cs" />
+    <Compile Include="PackDescription\ItemsChoiceType.cs" />
+    <Compile Include="PackDescription\JtagType.cs" />
+    <Compile Include="PackDescription\MemoryType.cs" />
     <Compile Include="PackDescription\Package.cs" />
     <Compile Include="PackDescription\Parsers.cs" />
-    <Compile Include="PackDescription\PDSCNames.cs" />
+    <Compile Include="PackDescription\ProcessorType.cs" />
     <Compile Include="PackDescription\Release.cs" />
-    <Compile Include="PackDescription\TaxonomyDescription.cs" />
-    <Compile Include="PackDescription\XElementExtensions.cs" />
+    <Compile Include="PackDescription\SequenceBlockType.cs" />
+    <Compile Include="PackDescription\SequenceControlType.cs" />
+    <Compile Include="PackDescription\SequencesType.cs" />
+    <Compile Include="PackDescription\SequenceType.cs" />
+    <Compile Include="PackDescription\SerialWireType.cs" />
+    <Compile Include="PackDescription\SubFamily.cs" />
+    <Compile Include="PackDescription\SwdType.cs" />
+    <Compile Include="PackDescription\TaxonomyDescriptionType.cs" />
+    <Compile Include="PackDescription\TraceBufferType.cs" />
+    <Compile Include="PackDescription\TracePortType.cs" />
+    <Compile Include="PackDescription\TraceType.cs" />
     <Compile Include="PackIndexEntry.cs" />
     <Compile Include="PackIndex.cs" />
     <Compile Include="PackInstallProgress.cs" />
@@ -81,6 +129,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

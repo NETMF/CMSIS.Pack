@@ -1,20 +1,19 @@
 using System;
-using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace CMSIS.Pack.PackDescription
 {
+    /// <remarks/>
     [Serializable( )]
-    [XmlType( AnonymousType=true)]
-    public partial class Component : ComponenOrBundleGroup
+    public partial class ComponentCategoryType
     {
     
-        private bool deprecatedField;
+        private string cvendorField;
     
-        private string rTE_Components_hField;
+        private string cbundleField;
     
-        private FileType[] filesField;
+        private string cclassField;
     
         private string cgroupField;
     
@@ -22,50 +21,43 @@ namespace CMSIS.Pack.PackDescription
     
         private string cvariantField;
     
+        private string cversionField;
+    
         private string capiversionField;
     
-        private string conditionField;
-    
-        private string maxInstancesField;
-    
-        private string generatorField;
-    
-        public Component() {
-            deprecatedField = false;
-        }
-    
         /// <remarks/>
-        [DefaultValue( false)]
-        public bool deprecated {
+        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Cvendor {
             get {
-                return deprecatedField;
+                return cvendorField;
             }
             set {
-                deprecatedField = value;
-            }
-        }
-
-        /// <remarks/>
-        public string RTE_Components_h {
-            get {
-                return rTE_Components_hField;
-            }
-            set {
-                rTE_Components_hField = value;
+                cvendorField = value;
             }
         }
     
         /// <remarks/>
-        [XmlArrayItem( "file", IsNullable=false)]
-        public FileType[] files {
+        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Cbundle {
             get {
-                return filesField;
+                return cbundleField;
             }
             set {
-                filesField = value;
+                cbundleField = value;
             }
         }
-
+    
+        /// <remarks/>
+        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Cclass {
+            get {
+                return cclassField;
+            }
+            set {
+                cclassField = value;
+            }
+        }
+    
         /// <remarks/>
         [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string Cgroup {
@@ -101,45 +93,23 @@ namespace CMSIS.Pack.PackDescription
     
         /// <remarks/>
         [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Cversion {
+            get {
+                return cversionField;
+            }
+            set {
+                cversionField = value;
+            }
+        }
+    
+        /// <remarks/>
+        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string Capiversion {
             get {
                 return capiversionField;
             }
             set {
                 capiversionField = value;
-            }
-        }
-    
-        /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string condition {
-            get {
-                return conditionField;
-            }
-            set {
-                conditionField = value;
-            }
-        }
-    
-        /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified, DataType="integer")]
-        public string maxInstances {
-            get {
-                return maxInstancesField;
-            }
-            set {
-                maxInstancesField = value;
-            }
-        }
-    
-        /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string generator {
-            get {
-                return generatorField;
-            }
-            set {
-                generatorField = value;
             }
         }
     }

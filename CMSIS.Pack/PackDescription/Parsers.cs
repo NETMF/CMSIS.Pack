@@ -13,28 +13,17 @@ namespace CMSIS.Pack.PackDescription
                    select int.Parse( value );
         }
 
-        // Official W3C XSD specs require 2 digits for the month and day
-        // However, many PDSC files in the wild only have one, thus this
-        // parser handles the incorrectly formed dates
-        internal static Parser<DateTime> DateTime = from year in Integer( 4, 4 )
-                                                    from sep in Parse.Char( '-' )
-                                                    from month in Integer( 1, 2 )
-                                                    from sep2 in Parse.Char( '-' )
-                                                    from day in Integer( 1, 2 )
-                                                    select new DateTime( year, month, day );
+        internal static Parser<decimal> Double = from value in Parse.Decimal
+                                                 select decimal.Parse( value, CultureInfo.CurrentCulture );
 
-        internal static Parser<double> Double = from value in Parse.Decimal
-                                                select double.Parse( value, CultureInfo.CurrentCulture );
-
-        internal static Parser<double> ScaledInteger = from value in Parse.Digit.AtLeastOnce( ).Text( )
-                                                       from scale in ScaledIntMultiplier
-                                                       select ( double )int.Parse( value ) * scale;
+        internal static Parser<decimal> ScaledDecimal = from signMul in Parse.Char('-').Return(-1).Or( Parse.Return( 1 ))
+                                                        from value in Parse.Digit.AtLeastOnce( ).Text( )
+                                                        from scale in ScaledIntMultiplier
+                                                        select signMul * decimal.Parse( value ) * scale;
 
         internal static Parser<int> ScaledIntMultiplier = Parse.Chars( 'k', 'K' ).Return( 1024 )
                                                                .Or( Parse.Chars( 'm', 'M' ).Return( 1024 * 1024 ) )
                                                                .Or( Parse.Return( 1 ) );
-
-        internal static Parser<double> NonConformantDecimal = ScaledInteger.Or( Double );
 
         internal static bool IsIntegerScaleChar( char arg )
         {
@@ -43,6 +32,5 @@ namespace CMSIS.Pack.PackDescription
                 || arg == 'm'
                 || arg == 'M';
         }
-
     }
 }
