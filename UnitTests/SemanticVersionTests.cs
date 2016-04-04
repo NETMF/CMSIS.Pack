@@ -161,6 +161,13 @@ namespace UnitTests
         }
 
         [TestMethod]
+        [ExpectedException( typeof( FormatException ))]
+        public void StaticParseSimpleMajorMinorOnlyFailsIfNotEnabledTest( )
+        {
+            var ver = SemanticVersion.Parse( "2.1" );
+        }
+
+        [TestMethod]
         public void StaticParseNumericIdentifier()
         {
             var ver = SemanticVersion.Parse( "2.0.1-2.alpha", SemanticVersionOptions.PatchOptional );
