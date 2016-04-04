@@ -21,7 +21,7 @@ namespace CMSIS.Pack.PackDescription
             get { return Version.ToString( ); }
             set
             {
-                Version = SemanticVersion.Parse( value, SemanticVersionParseOptions.PatchOptional );
+                Version = SemanticVersion.Parse( value, SemanticVersionOptions.PatchOptional );
             }
         }
 

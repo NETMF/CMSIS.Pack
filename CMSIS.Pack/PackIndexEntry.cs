@@ -43,7 +43,7 @@ namespace CMSIS.Pack
             Vendor = parts[ 0 ];
             Name = parts[ 1 ];
             SemanticVersion version;
-            if( !SemanticVersion.TryParse( packVersion, SemanticVersionParseOptions.PatchOptional, out version ) )
+            if( !SemanticVersion.TryParse( packVersion, SemanticVersionOptions.PatchOptional, out version ) )
                 throw new ArgumentException( "Invalid semantic version provided", nameof( packVersion ) );
             Version = version;
             LocalPath = Path.Combine( Vendor, Name, Version.ToString( ) );

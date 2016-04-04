@@ -129,7 +129,7 @@ namespace UnitTests
         [TestMethod]
         public void StaticParseDefaultPatchTest()
         {
-            var ver = SemanticVersion.Parse( "0.1-alpha.beta+foo-bar.baz", SemanticVersionParseOptions.PatchOptional );
+            var ver = SemanticVersion.Parse( "0.1-alpha.beta+foo-bar.baz", SemanticVersionOptions.PatchOptional );
             Assert.AreEqual( 0, ver.Major );
             Assert.AreEqual( 1, ver.Minor );
             Assert.AreEqual( 0, ver.Patch );
@@ -149,7 +149,7 @@ namespace UnitTests
         [TestMethod]
         public void StaticParseSimpleMajorMinorOnlyTest( )
         {
-            var ver = SemanticVersion.Parse( "2.1", SemanticVersionParseOptions.PatchOptional );
+            var ver = SemanticVersion.Parse( "2.1", SemanticVersionOptions.PatchOptional );
             Assert.AreEqual( 2, ver.Major );
             Assert.AreEqual( 1, ver.Minor );
             Assert.AreEqual( 0, ver.Patch );
@@ -163,7 +163,7 @@ namespace UnitTests
         [TestMethod]
         public void StaticParseNumericIdentifier()
         {
-            var ver = SemanticVersion.Parse( "2.0.1-2.alpha", SemanticVersionParseOptions.PatchOptional );
+            var ver = SemanticVersion.Parse( "2.0.1-2.alpha", SemanticVersionOptions.PatchOptional );
             Assert.AreEqual( 2, ver.Major );
             Assert.AreEqual( 0, ver.Minor );
             Assert.AreEqual( 1, ver.Patch );
