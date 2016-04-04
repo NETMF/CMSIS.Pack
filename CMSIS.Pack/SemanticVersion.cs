@@ -37,7 +37,7 @@ namespace CMSIS.Pack
         /// <param name="patch">Patch version number</param>
         /// <param name="preReleaseParts">Array of individual pre-release parts (not including the separating '.')</param>
         /// <param name="metadataParts">Array of individual Build Metadata parts (not including the separating '.')</param>
-        public SemanticVersion( int major, int minor, int patch, string[ ] preReleaseParts, string[ ] metadataParts )
+        public SemanticVersion( int major, int minor, int patch, IEnumerable<string> preReleaseParts, IEnumerable<string> metadataParts )
         {
             if( major < 0 )
                 throw new ArgumentOutOfRangeException( nameof( major ) );
@@ -51,8 +51,8 @@ namespace CMSIS.Pack
             Major = major;
             Minor = minor;
             Patch = patch;
-            PreReleaseParts_ = preReleaseParts ?? new string[ 0 ];
-            BuildMetadata_ = metadataParts ?? new string[ 0 ];
+            PreReleaseParts_ = ( preReleaseParts ?? Enumerable.Empty<string>() ).ToArray();
+            BuildMetadata_ = ( metadataParts ?? Enumerable.Empty<string>() ).ToArray();
 
             // Validate each part conforms to an "identifier" as defined by the spec
             if( !ValidatePrereleaseIdentifierParts( PreReleaseParts_ ) )
@@ -355,8 +355,8 @@ namespace CMSIS.Pack
             : this( parts.Major
                   , parts.Minor
                   , parts.Patch.GetOrDefault( )
-                  , parts.Prerelease.GetOrElse( Enumerable.Empty<string>( ) ).ToArray( )
-                  , parts.BuildMetadata.GetOrElse( Enumerable.Empty<string>( ) ).ToArray( )
+                  , parts.Prerelease
+                  , parts.BuildMetadata
                   )
         {
             if( !options.HasFlag( SemanticVersionOptions.PatchOptional ) && !parts.Patch.IsDefined )
@@ -379,15 +379,15 @@ namespace CMSIS.Pack
                 Major = major;
                 Minor = minor;
                 Patch = patch;
-                Prerelease = prereleaseParts;
-                BuildMetadata = buildParts;
+                Prerelease = prereleaseParts.GetOrElse( Enumerable.Empty<string>() );
+                BuildMetadata = buildParts.GetOrElse( Enumerable.Empty<string>() );
             }
 
             internal int Major { get; }
             internal int Minor { get; }
             internal IOption<int> Patch { get; }
-            internal IOption<IEnumerable<string>> Prerelease { get; }
-            internal IOption<IEnumerable<string>> BuildMetadata { get; }
+            internal IEnumerable<string> Prerelease { get; }
+            internal IEnumerable<string> BuildMetadata { get; }
         }
 
         private static Parser<char> Range( char start, char end ) => Sprache.Parse.Chars( Enumerable.Range( start, end ).Select( i=>(char)i ).ToArray() );
