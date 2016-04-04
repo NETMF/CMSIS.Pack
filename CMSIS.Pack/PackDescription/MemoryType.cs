@@ -2,13 +2,12 @@ using System;
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
+using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
     public partial class MemoryType {
-    
-        private string pnameField;
     
         private MemoryIDTypeEnum idField;
     
@@ -27,18 +26,16 @@ namespace CMSIS.Pack.PackDescription
             defaultField = false;
             startupField = false;
         }
-    
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Pname {
-            get {
-                return pnameField;
-            }
-            set {
-                pnameField = value;
-            }
+        [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string ProcessorName
+        {
+            get { return ProcessorName_; }
+            set { ProcessorName_ = Parsers.RestrictedString.Parse( value ); }
         }
-    
+        private string ProcessorName_;
+
         /// <remarks/>
         [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
         public MemoryIDTypeEnum id {

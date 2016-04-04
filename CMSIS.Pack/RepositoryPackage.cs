@@ -62,7 +62,7 @@ namespace CMSIS.Pack
             InstallState = PackInstallState.Downloading;
             try
             {
-                await Repository.Download( this, progressSink );
+                await Repository.DownloadAsync( this, progressSink );
             }
             catch
             {

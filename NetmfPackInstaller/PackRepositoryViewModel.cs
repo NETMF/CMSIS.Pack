@@ -31,7 +31,7 @@ namespace NetmfPackInstaller
 
         internal async Task LoadAsync( )
         {
-            await Repository.LoadFromLocal( );
+            await Repository.LoadFromLocalAsync( );
 
             State = LoadState.ParsingDescriptions;
             foreach( var pack in Repository.Packs )
@@ -72,7 +72,7 @@ namespace NetmfPackInstaller
 
         private async void RefreshIndexAsync( )
         {
-            await Repository.UpdateLocalFromSource( );
+            await Repository.UpdateLocalFromSourceAsync( );
         }
 
         private readonly PackRepository Repository;

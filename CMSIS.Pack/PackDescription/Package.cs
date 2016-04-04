@@ -57,7 +57,7 @@ namespace CMSIS.Pack.PackDescription
         /// <remarks/>
         [XmlArrayItem( "board", IsNullable=false)]
         [XmlArray( "boards" )]
-        public BoardType[] Boards { get; set; }
+        public Board[] Boards { get; set; }
 
         /// <remarks/>
         [XmlArrayItem( "description", IsNullable=false)]
@@ -112,7 +112,11 @@ namespace CMSIS.Pack.PackDescription
             // locations that the serializer can't handle
             using( var rdr = XmlReader.Create( textReader, new XmlReaderSettings( ) { IgnoreComments = true } ) )
             {
-                return await Task.Run( ( ) => ( Package )ser.Deserialize( rdr ) );
+                return await Task.Run( ( ) =>
+                {
+                    var pkg = ( Package )ser.Deserialize( rdr );
+                    return pkg;
+                } );
             }
         }
     }

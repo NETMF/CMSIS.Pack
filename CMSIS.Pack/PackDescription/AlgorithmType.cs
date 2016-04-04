@@ -2,106 +2,45 @@ using System;
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
+using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class AlgorithmType {
-    
-        private string pnameField;
-    
-        private string nameField;
-    
-        private string startField;
-    
-        private string sizeField;
-    
-        private string rAMstartField;
-    
-        private string rAMsizeField;
-    
-        private bool defaultField;
-    
-        public AlgorithmType() {
-            defaultField = false;
-        }
-    
+    public partial class Algorithm
+    {
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Pname {
-            get {
-                return pnameField;
-            }
-            set {
-                pnameField = value;
-            }
+        [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string ProcessorName
+        {
+            get { return ProcessorName_; }
+            set { ProcessorName_ = Parsers.RestrictedString.Parse( value ); }
         }
-    
+        private string ProcessorName_;
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string name {
-            get {
-                return nameField;
-            }
-            set {
-                nameField = value;
-            }
-        }
-    
+        [XmlAttribute( "name", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Name { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string start {
-            get {
-                return startField;
-            }
-            set {
-                startField = value;
-            }
-        }
-    
+        [XmlAttribute( "start", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Start { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string size {
-            get {
-                return sizeField;
-            }
-            set {
-                sizeField = value;
-            }
-        }
-    
+        [XmlAttribute( "size", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Size { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string RAMstart {
-            get {
-                return rAMstartField;
-            }
-            set {
-                rAMstartField = value;
-            }
-        }
-    
+        [XmlAttribute( "RAMstart", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string RAMStart { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string RAMsize {
-            get {
-                return rAMsizeField;
-            }
-            set {
-                rAMsizeField = value;
-            }
-        }
-    
+        [XmlAttribute( "RAMsize", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string RAMSize { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        [DefaultValue( false)]
-        public bool @default {
-            get {
-                return defaultField;
-            }
-            set {
-                defaultField = value;
-            }
-        }
+        [XmlAttribute( "default", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        [DefaultValue( false )]
+        public bool Default { get; set; }
     }
 }

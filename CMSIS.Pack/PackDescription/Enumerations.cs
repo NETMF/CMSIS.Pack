@@ -4,6 +4,70 @@ using System.Xml.Serialization;
 
 namespace CMSIS.Pack.PackDescription
 {
+    [Serializable( )]
+    public enum CompilerOutputType
+    {
+        /// <remarks/>
+        [XmlEnum( "*" )]
+        Other = 0,
+
+        /// <remarks/>
+        exe,
+
+        /// <remarks/>
+        lib
+    }
+
+    [Serializable( )]
+    public enum CompilerEnumType
+    {
+        /// <remarks/>
+        [XmlEnum( "*" )]
+        Other = 0,
+
+        /// <remarks/>
+        GCC,
+
+        /// <remarks/>
+        ARMCC,
+
+        /// <remarks/>
+        IAR,
+
+        /// <remarks/>
+        Tasking,
+
+        /// <remarks/>
+        GHS,
+
+        /// <remarks/>
+        Cosmic,
+
+        /// <remarks/>
+        [XmlEnum( "G++" )]
+        Gpp
+    }
+
+    [Serializable( )]
+    public enum BoardBookCategoryEnum
+    {
+
+        /// <remarks/>
+        setup,
+
+        /// <remarks/>
+        schematic,
+
+        /// <remarks/>
+        overview,
+
+        /// <remarks/>
+        manual,
+
+        /// <remarks/>
+        other,
+    }
+
     /// <remarks/>
     [Serializable( )]
     public enum DeviceVendorEnum

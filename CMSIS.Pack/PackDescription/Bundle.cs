@@ -6,69 +6,23 @@ namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
     [XmlType( AnonymousType = true )]
-    public partial class Bundle : ComponenOrBundleGroup
+    public partial class Bundle 
+        : ComponenOrBundleGroup
     {
-        private string docField;
-
-        private Component[] componentField;
-
-        private string cbundleField;
-
-        private string generatorField;
-
         /// <remarks/>
-        public string doc
-        {
-            get
-            {
-                return docField;
-            }
-            set
-            {
-                docField = value;
-            }
-        }
+        [XmlElement("doc")]
+        public string Document { get; set; }
 
         /// <remarks/>
         [XmlElement( "component" )]
-        public Component[ ] component
-        {
-            get
-            {
-                return componentField;
-            }
-            set
-            {
-                componentField = value;
-            }
-        }
+        public Component[ ] Component { get; set; }
 
         /// <remarks/>
-        [XmlAttribute( Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
-        public string Cbundle
-        {
-            get
-            {
-                return cbundleField;
-            }
-            set
-            {
-                cbundleField = value;
-            }
-        }
+        [XmlAttribute( "Cbundle", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string Name { get; set; }
 
         /// <remarks/>
-        [XmlAttribute( Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
-        public string generator
-        {
-            get
-            {
-                return generatorField;
-            }
-            set
-            {
-                generatorField = value;
-            }
-        }
+        [XmlAttribute( "generator", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string Generator { get; set; }
     }
 }

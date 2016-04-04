@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class CompatibleDeviceType
+    public partial class BoardsDevice
     {
         /// <remarks/>
         [XmlAttribute( "deviceIndex", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]

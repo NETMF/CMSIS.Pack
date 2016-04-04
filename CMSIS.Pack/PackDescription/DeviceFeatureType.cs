@@ -9,8 +9,6 @@ namespace CMSIS.Pack.PackDescription
     [Serializable( )]
     public partial class DeviceFeatureType {
     
-        private string pnameField;
-    
         private string typeField;
     
         private decimal nField;
@@ -26,18 +24,16 @@ namespace CMSIS.Pack.PackDescription
         private int countField;
     
         private bool countFieldSpecified;
-    
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Pname {
-            get {
-                return pnameField;
-            }
-            set {
-                pnameField = value;
-            }
+        [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string ProcessorName
+        {
+            get { return ProcessorName_; }
+            set { ProcessorName_ = Parsers.RestrictedString.Parse( value ); }
         }
-    
+        private string ProcessorName_;
+
         /// <remarks/>
         [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string type {
@@ -51,6 +47,7 @@ namespace CMSIS.Pack.PackDescription
     
         /// <remarks/>
         [XmlAttribute("n", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
         public string RawNString {
             get
             {
@@ -132,7 +129,7 @@ namespace CMSIS.Pack.PackDescription
         }
 
         [OnDeserializing]
-        internal void OnDeserializing( StreamingContext ctx )
+        private void OnDeserializing( StreamingContext ctx )
         {
         }
     }

@@ -1,49 +1,28 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class CompileType {
-    
-        private string pnameField;
-    
-        private string headerField;
-    
-        private string defineField;
+    public partial class CompileType
+    {
+        /// <remarks/>
+        [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string ProcessorName
+        {
+            get { return ProcessorName_; }
+            set { ProcessorName_ = Parsers.RestrictedString.Parse( value ); }
+        }
+        private string ProcessorName_;
+
+        /// <remarks/>
+        [XmlAttribute( "header", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Header { get; set; }
     
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Pname {
-            get {
-                return pnameField;
-            }
-            set {
-                pnameField = value;
-            }
-        }
-    
-        /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string header {
-            get {
-                return headerField;
-            }
-            set {
-                headerField = value;
-            }
-        }
-    
-        /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string define {
-            get {
-                return defineField;
-            }
-            set {
-                defineField = value;
-            }
-        }
+        [XmlAttribute( "define", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Define { get; set; }
     }
 }

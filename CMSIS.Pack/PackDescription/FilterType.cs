@@ -1,6 +1,7 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
@@ -34,8 +35,6 @@ namespace CMSIS.Pack.PackDescription
         private DendianEnum dendianField;
     
         private bool dendianFieldSpecified;
-    
-        private string pnameField;
     
         private string cvendorField;
     
@@ -216,18 +215,16 @@ namespace CMSIS.Pack.PackDescription
                 dendianFieldSpecified = value;
             }
         }
-    
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Pname {
-            get {
-                return pnameField;
-            }
-            set {
-                pnameField = value;
-            }
+        [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string ProcessorName
+        {
+            get { return ProcessorName_; }
+            set { ProcessorName_ = Parsers.RestrictedString.Parse( value ); }
         }
-    
+        private string ProcessorName_;
+
         /// <remarks/>
         [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
         public string Cvendor {

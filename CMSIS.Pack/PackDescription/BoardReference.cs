@@ -4,19 +4,24 @@ using System.Xml.Serialization;
 
 namespace CMSIS.Pack.PackDescription
 {
+    /// <remarks/>
     [Serializable( )]
-    public partial class CompatibleDeviceType
+    public partial class BoardReference
     {
         /// <remarks/>
-        [XmlAttribute( "deviceIndex", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string DeviceIndex { get; set; }
+        [XmlAttribute( "name", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Name { get; set; }
+    
+        /// <remarks/>
+        [XmlAttribute( "vendor", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string BoardVendor { get; set; }
 
         /// <remarks/>
-        [XmlAttribute( "DVendor", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        [XmlAttribute( "DVendor", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
         [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
         public string RawDeviceVendorString
         {
-            get { return DeviceVendor.ToString( ); }
+            get { return DeviceVendor.ToString(); }
             set { DeviceVendor = DeviceVendor.Parse( value ); }
         }
 
@@ -25,7 +30,7 @@ namespace CMSIS.Pack.PackDescription
 
         /// <remarks/>
         [XmlAttribute( "Dfamily", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string DeviceFamily { get; set; }
+        public string DeviceFamily { get; set;}
     
         /// <remarks/>
         [XmlAttribute( "DsubFamily", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]

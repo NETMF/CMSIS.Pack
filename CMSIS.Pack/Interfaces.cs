@@ -93,23 +93,39 @@ namespace CMSIS.Pack
         /// <summary>Location of the locally installed packs that updates and new packs are installed into</summary>
         string LocalPath { get; }
 
+        /// <summary>Last time the repository's index was updated</summary>
         DateTime LastUpdatedTimeUTC { get; }
-        /// <summary>Full path to the local ".Web" folder containing the pack descriptions cached from the web source</summary>
+        
+        /// <summary>Full path to the local '.Web' folder containing the pack descriptions cached from the web source</summary>
         string WebRoot { get; }
 
-        /// <summary>Full path </summary>
+        /// <summary>Full path to the local '.Download' folder containing pack files downloaded in this local repository</summary>
         string DownloadRoot { get; }
 
+        /// <summary>Collection of packs described in the index for this repository</summary>
         IEnumerable<IRepositoryPackage> Packs { get; }
 
+        /// <summary>Event fired when this repository is updated, either by the current application or an external process</summary>
         event EventHandler<RepositoryUpdateEventArgs> Updated;
-        
-        Task UpdateLocalFromSource( );
-        
-        Task LoadFromLocal( );
-        
-        Task Download( IRepositoryPackage package, IProgress<FileDownloadProgress> progressSink );
 
+        /// <summary>Update the local repository index and cached pack description files from the source</summary>
+        /// <returns><see cref="Task"/></returns>
+        Task UpdateLocalFromSourceAsync( );
+
+        /// <summary>Loads and parser all of the locally cached package description files listed in the packs index</summary>
+        /// <returns><see cref="Task"/></returns>
+        Task LoadFromLocalAsync( );
+
+        /// <summary>Download a package from the <see cref="SourceUri"/></summary>
+        /// <param name="package">Package to download</param>
+        /// <param name="progressSink">progress callback interface</param>
+        /// <returns><see cref="Task"/></returns>
+        Task DownloadAsync( IRepositoryPackage package, IProgress<FileDownloadProgress> progressSink );
+
+        /// <summary>Installs a given package into the repository</summary>
+        /// <param name="package">Package to install</param>
+        /// <param name="progressSink">Progress callback for the installation</param>
+        /// <returns><see cref="Task"/></returns>
         Task InstallPack( IRepositoryPackage package, IProgress<PackInstallProgress> progressSink );
     }
 }

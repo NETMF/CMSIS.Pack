@@ -1,6 +1,7 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
@@ -12,8 +13,6 @@ namespace CMSIS.Pack.PackDescription
         private TracePortType[] traceportField;
     
         private TraceBufferType[] tracebufferField;
-    
-        private string pnameField;
     
         private XmlAttribute[] anyAttrField;
     
@@ -49,18 +48,16 @@ namespace CMSIS.Pack.PackDescription
                 tracebufferField = value;
             }
         }
-    
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Pname {
-            get {
-                return pnameField;
-            }
-            set {
-                pnameField = value;
-            }
+        [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string ProcessorName
+        {
+            get { return ProcessorName_; }
+            set { ProcessorName_ = Parsers.RestrictedString.Parse( value ); }
         }
-    
+        private string ProcessorName_;
+
         /// <remarks/>
         [XmlAnyAttribute( )]
         public XmlAttribute[ ] AnyAttr {

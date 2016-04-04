@@ -6,88 +6,47 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class ApiType {
-    
-        private string descriptionField;
-    
-        private FileType[] filesField;
-    
-        private string cclassField;
-    
-        private string cgroupField;
-    
-        private bool exclusiveField;
-    
-        private string capiversionField;
-    
-        public ApiType() {
-            exclusiveField = true;
+    public partial class ApiType
+    {
+        public ApiType()
+        {
+            Exclusive = true;
         }
-    
+
         /// <remarks/>
-        public string description {
-            get {
-                return descriptionField;
-            }
-            set {
-                descriptionField = value;
-            }
-        }
-    
+        [XmlElement("description")]
+        public string Description { get; set; }
+
         /// <remarks/>
+        [XmlArray("files")]
         [XmlArrayItem( "file", IsNullable=false)]
-        public FileType[] files {
-            get {
-                return filesField;
-            }
-            set {
-                filesField = value;
-            }
-        }
-    
+        public FileType[] Files { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Cclass {
-            get {
-                return cclassField;
-            }
-            set {
-                cclassField = value;
-            }
-        }
-    
+        [XmlAttribute( "Cclass", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Class { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Cgroup {
-            get {
-                return cgroupField;
-            }
-            set {
-                cgroupField = value;
-            }
-        }
-    
+        [XmlAttribute( "Cgroup", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string Group { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        [DefaultValue( true)]
-        public bool exclusive {
-            get {
-                return exclusiveField;
-            }
-            set {
-                exclusiveField = value;
-            }
-        }
-    
+        [XmlAttribute( "exclusive", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        [DefaultValue( true )]
+        public bool Exclusive { get; set; }
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Capiversion {
-            get {
-                return capiversionField;
-            }
-            set {
-                capiversionField = value;
+        [XmlAttribute( "CapiVersion", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        public string ApiVersionString
+        {
+            get { return ApiVersion.ToString(); }
+            set
+            {
+                ApiVersion = SemanticVersion.Parse( value, SemanticVersionParseOptions.PatchOptional );
             }
         }
+
+        [XmlIgnore]
+        public SemanticVersion ApiVersion { get; set; }
     }
 }

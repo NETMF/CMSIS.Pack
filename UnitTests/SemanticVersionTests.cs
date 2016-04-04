@@ -129,7 +129,7 @@ namespace UnitTests
         [TestMethod]
         public void StaticParseDefaultPatchTest()
         {
-            var ver = SemanticVersion.Parse( "0.1-alpha.beta+foo-bar.baz", patchOptional:true );
+            var ver = SemanticVersion.Parse( "0.1-alpha.beta+foo-bar.baz", SemanticVersionParseOptions.PatchOptional );
             Assert.AreEqual( 0, ver.Major );
             Assert.AreEqual( 1, ver.Minor );
             Assert.AreEqual( 0, ver.Patch );
@@ -146,6 +146,37 @@ namespace UnitTests
             VerifyToStringReverseParse( ver );
         }
 
+        [TestMethod]
+        public void StaticParseSimpleMajorMinorOnlyTest( )
+        {
+            var ver = SemanticVersion.Parse( "2.1", SemanticVersionParseOptions.PatchOptional );
+            Assert.AreEqual( 2, ver.Major );
+            Assert.AreEqual( 1, ver.Minor );
+            Assert.AreEqual( 0, ver.Patch );
+            Assert.IsTrue( ver.IsValid );
+            Assert.IsFalse( ver.IsDevelopment );
+            Assert.IsFalse( ver.IsPrerelease );
+            Assert.AreEqual( 0, ver.PreReleaseParts.Count );
+            VerifyToStringReverseParse( ver );
+        }
+
+        [TestMethod]
+        public void StaticParseNumericIdentifier()
+        {
+            var ver = SemanticVersion.Parse( "2.0.1-2.alpha", SemanticVersionParseOptions.PatchOptional );
+            Assert.AreEqual( 2, ver.Major );
+            Assert.AreEqual( 0, ver.Minor );
+            Assert.AreEqual( 1, ver.Patch );
+            Assert.IsTrue( ver.IsValid );
+            Assert.IsFalse( ver.IsDevelopment );
+            Assert.IsTrue( ver.IsPrerelease );
+            Assert.AreEqual( 2, ver.PreReleaseParts.Count );
+            Assert.AreEqual( "2", ver.PreReleaseParts[ 0 ] );
+            Assert.AreEqual( "alpha", ver.PreReleaseParts[ 1 ] );
+            Assert.AreEqual( 0, ver.BuildMetadata.Count );
+            Assert.AreEqual( "2.0.1-2.alpha", ver.ToString( ) );
+            VerifyToStringReverseParse( ver );
+        }
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
         public void StaticParseDefaultPatchExceptionTest()

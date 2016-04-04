@@ -1,7 +1,6 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
-using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
@@ -11,8 +10,19 @@ namespace CMSIS.Pack.PackDescription
     {
         /// <remarks/>
         [XmlAttribute( "version", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Version { get; set; }
-    
+        [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+        public string RawVersionString
+        {
+            get { return Version.ToString( ); }
+            set
+            {
+                Version = SemanticVersion.Parse( value, SemanticVersionParseOptions.PatchOptional );
+            }
+        }
+
+        [XmlIgnore]
+        public SemanticVersion Version { get; set; }
+
         [XmlIgnore]
         public DateTime? Date { get; set; }
 
@@ -23,11 +33,12 @@ namespace CMSIS.Pack.PackDescription
         /// the <see cref="Date"/> property.
         /// </remarks>
         [XmlAttribute("date", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
         public string RawDateString
         {
             get
             {
-                return this.Date?.ToString("yyyy-MM-dd");
+                return Date?.ToString("yyyy-MM-dd");
             }
 
             set
@@ -46,6 +57,7 @@ namespace CMSIS.Pack.PackDescription
         /// the <see cref="Date"/> property.
         /// </remarks>
         [XmlAttribute( "deprecated", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
+        [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
         public string RawDeprecatedString
         {
             get

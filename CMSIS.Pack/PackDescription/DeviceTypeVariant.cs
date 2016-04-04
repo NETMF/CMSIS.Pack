@@ -16,7 +16,7 @@ namespace CMSIS.Pack.PackDescription
     
         private MemoryType[] memoryField;
     
-        private AlgorithmType[] algorithmField;
+        private Algorithm[] algorithmField;
     
         private BookType[] bookField;
     
@@ -83,7 +83,7 @@ namespace CMSIS.Pack.PackDescription
     
         /// <remarks/>
         [XmlElement( "algorithm")]
-        public AlgorithmType[] algorithm {
+        public Algorithm[] algorithm {
             get {
                 return algorithmField;
             }

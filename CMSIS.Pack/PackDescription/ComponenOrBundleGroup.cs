@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace CMSIS.Pack.PackDescription
 {
-    public partial class ComponenOrBundleGroup
+    public class ComponenOrBundleGroup
     {
         [XmlAttribute("Cvendor")]
         public string Vendor { get; set; }
@@ -14,7 +14,18 @@ namespace CMSIS.Pack.PackDescription
         [XmlElement("description")]
         public string Description { get; set; }
 
-        [XmlAttribute( Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
-        public string Cversion { get; set; }
+        [XmlAttribute( "Cversion", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+        public string RawVersionString
+        {
+            get { return Version.ToString( ); }
+            set
+            {
+                Version = SemanticVersion.Parse( value, SemanticVersionParseOptions.PatchOptional );
+            }
+        }
+
+        [XmlIgnore]
+        public SemanticVersion Version { get; set; }
     }
 }

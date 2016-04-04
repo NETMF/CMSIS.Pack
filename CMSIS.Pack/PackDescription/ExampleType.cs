@@ -16,7 +16,7 @@ namespace CMSIS.Pack.PackDescription
     
         private string descriptionField;
     
-        private BoardReferenceType[] boardField;
+        private BoardReference[] boardField;
     
         private ExampleProjectTypeEnvironment[] projectField;
     
@@ -44,7 +44,7 @@ namespace CMSIS.Pack.PackDescription
     
         /// <remarks/>
         [XmlElement( "board")]
-        public BoardReferenceType[] board {
+        public BoardReference[] board {
             get {
                 return boardField;
             }

@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
+using Sprache;
 
 namespace CMSIS.Pack
 {
+    [Flags]
+    public enum SemanticVersionParseOptions
+    {
+        None = 0,
+        PatchOptional = 1,
+        //...
+    }
+
     /// <summary>Version structure for versions based on Semantic Versioning v2.0 as defined by http://semver.org </summary>
     /// <remarks>
     /// This class implements creating, parsing and comparing semantic version values. In
@@ -26,7 +34,7 @@ namespace CMSIS.Pack
         /// <param name="patch">Patch version number</param>
         /// <param name="preReleaseParts">Array of individual pre-release parts (not including the separating '.')</param>
         /// <param name="metadataParts">Array of individual Build Metadata parts (not including the separating '.')</param>
-        public SemanticVersion( int major, int minor, int patch, string[] preReleaseParts, string[] metadataParts)
+        public SemanticVersion( int major, int minor, int patch, string[ ] preReleaseParts, string[ ] metadataParts )
         {
             if( major < 0 )
                 throw new ArgumentOutOfRangeException( nameof( major ) );
@@ -37,14 +45,14 @@ namespace CMSIS.Pack
             if( patch < 0 )
                 throw new ArgumentOutOfRangeException( nameof( patch ) );
 
-            Major_ = major;
-            Minor_ = minor;
-            Patch_ = patch;
-            PreReleaseParts_ = preReleaseParts ?? new string[0];
-            BuildMetadata_ = metadataParts ?? new string[0];
-            
+            Major = major;
+            Minor = minor;
+            Patch = patch;
+            PreReleaseParts_ = preReleaseParts ?? new string[ 0 ];
+            BuildMetadata_ = metadataParts ?? new string[ 0 ];
+
             // Validate each part conforms to an "identifier" as defined by the spec
-            if(!ValidateIdentifierParts( PreReleaseParts_ ) )
+            if( !ValidateIdentifierParts( PreReleaseParts_ ) )
                 throw new ArgumentException( "Invalid identifier for pre-release part", nameof( preReleaseParts ) );
 
             if( !ValidateIdentifierParts( BuildMetadata_ ) )
@@ -66,6 +74,24 @@ namespace CMSIS.Pack
                   )
         {
         }
+
+        /// <summary>Indicates if this version is a development version (e.g. Major Version == 0 )</summary>
+        public bool IsDevelopment => Major == 0;
+
+        /// <summary>Indicates if this version is a pre-release version (e.g. IsDevelopment or Has pre-release parts following the Patch)</summary>
+        public bool IsPrerelease => IsDevelopment || PreReleaseParts.Count > 0;
+
+        /// <summary>Indicates if this is a valid version</summary>
+        public bool IsValid => Major >= 0 && Minor >= 0 && Patch >= 0;
+
+        /// <summary>Major version number</summary>
+        public int Major { get; }
+
+        /// <summary>Minor version number</summary>
+        public int Minor { get; }
+
+        /// <summary>Patch version number</summary>
+        public int Patch { get; }
 
         /// <inheritdoc/>
         public override int GetHashCode( )
@@ -89,7 +115,7 @@ namespace CMSIS.Pack
             if( !( obj is SemanticVersion ) )
                 return false;
 
-            return Equals( (SemanticVersion)obj );
+            return Equals( ( SemanticVersion )obj );
         }
 
         /// <inheritdoc/>
@@ -102,7 +128,7 @@ namespace CMSIS.Pack
         public int CompareTo( object obj )
         {
             if( !( obj is SemanticVersion ) )
-                throw new ArgumentException();
+                throw new ArgumentException( );
 
             return CompareTo( ( SemanticVersion )obj );
         }
@@ -147,13 +173,13 @@ namespace CMSIS.Pack
 
             if( PreReleaseParts.Count == 0 )
                 return 1;
-            
+
             if( other.PreReleaseParts.Count == 0 )
                 return -1;
 
             // Rules 3.a-c
             var partCount = Math.Min( PreReleaseParts.Count, other.PreReleaseParts.Count );
-            for( var i =0; i< partCount; ++i )
+            for( var i = 0; i < partCount; ++i )
             {
                 // rule 3.c
                 retVal = string.Compare( PreReleaseParts[ i ], other.PreReleaseParts[ i ], StringComparison.Ordinal );
@@ -161,40 +187,19 @@ namespace CMSIS.Pack
                     continue;
 
                 // Rule 3.a
-                int left,right;
-                if( !int.TryParse( PreReleaseParts[i], out left )
+                int left, right;
+                if( !int.TryParse( PreReleaseParts[ i ], out left )
                  || !int.TryParse( other.PreReleaseParts[ i ], out right )
                   )
-                { 
+                {
                     return retVal;
                 }
                 return left.CompareTo( right );
             }
-            
+
             // Rule #3.d
             return PreReleaseParts.Count.CompareTo( other.PreReleaseParts.Count );
         }
-
-        /// <summary>Indicates if this version is a development version (e.g. Major Version == 0 )</summary>
-        public bool IsDevelopment { get { return Major_ == 0; } }
-
-        /// <summary>Indicates if this version is a pre-release version (e.g. IsDevelopment or Has pre-release parts following the Patch)</summary>
-        public bool IsPrerelease { get { return IsDevelopment || PreReleaseParts.Count > 0; } }
-
-        /// <summary>Indicates if this is a valid version</summary>
-        public bool IsValid { get { return Major_ >= 0 && Minor_ >=0 && Patch_ >= 0; } }
-
-        /// <summary>Major version number</summary>
-        public int Major { get { return Major_; } }
-        private readonly int Major_;
-
-        /// <summary>Minor version number</summary>
-        public int Minor { get { return Minor_; } }
-        private readonly int Minor_;
-
-        /// <summary>Patch version number</summary>
-        public int Patch { get { return Patch_; } }
-        private readonly int Patch_;
 
         /// <summary>List of identifier parts forming the pre-release value</summary>
         /// <remarks>
@@ -202,16 +207,7 @@ namespace CMSIS.Pack
         /// value can consist of multiple parts separated by a '.', this list contains the
         /// individual parts without the leading '-' or separating '.'. 
         /// </remarks>
-        public IReadOnlyList<string> PreReleaseParts 
-        { 
-            get
-            {
-                if( PreReleaseParts_ == null )
-                    return new string[ 0 ];
-
-                return Array.AsReadOnly( PreReleaseParts_  );
-            }
-        }
+        public IReadOnlyList<string> PreReleaseParts => Array.AsReadOnly( PreReleaseParts_ ?? EmptyStringArray );
         private readonly string[ ] PreReleaseParts_;
 
         /// <summary>List of identifier parts forming the build Metadata value</summary>
@@ -220,23 +216,11 @@ namespace CMSIS.Pack
         /// value can consist of multiple parts separated by a '.', this list contains
         /// the individual parts without the leading '+' or separating '.'. 
         /// </remarks>
-        public IReadOnlyList<string> BuildMetadata
-        { 
-            get
-            {
-                if( BuildMetadata_ == null )
-                    return new string[ 0 ];
-
-                return Array.AsReadOnly( BuildMetadata_ );
-            }
-        }
+        public IReadOnlyList<string> BuildMetadata => Array.AsReadOnly( BuildMetadata_ ?? EmptyStringArray );
         private readonly string[ ] BuildMetadata_;
 
         /// <inheritdoc/>
-        public override string ToString( )
-        {
-            return ToString( true );
-        }
+        public override string ToString( ) => ToString( true );
 
         /// <summary>Creates a valid semantic version string from the component values of this version</summary>
         /// <param name="includeBuildMetadata">Flag to indicate if the Build Metadata should be included</param>
@@ -254,23 +238,20 @@ namespace CMSIS.Pack
                 bldr.Append( '-' );
                 bldr.Append( string.Join( ".", PreReleaseParts ) );
             }
-                
-            if( BuildMetadata.Count > 0 && includeBuildMetadata)
+
+            if( BuildMetadata.Count > 0 && includeBuildMetadata )
             {
                 bldr.Append( '+' );
                 bldr.Append( string.Join( ".", BuildMetadata ) );
             }
 
-            return bldr.ToString();
+            return bldr.ToString( );
         }
 
         /// <summary>Parse a semantic version string into it's component parts</summary>
         /// <param name="versionString">String containing the version to parse</param>
         /// <returns>Parsed version details</returns>
-        public static SemanticVersion Parse( string versionString )
-        {
-            return Parse( versionString, false );
-        }
+        public static SemanticVersion Parse( string versionString ) => Parse( versionString, SemanticVersionParseOptions.None );
 
         /// <summary>Parse a semantic version string into it's component parts</summary>
         /// <param name="versionString">String containing the version to parse</param>
@@ -280,65 +261,42 @@ namespace CMSIS.Pack
         /// This overload of Parse allows for a non-standard version where the Patch value
         /// defaults to 0 if not present, instead of triggering an exception.
         /// </remarks>
-        public static SemanticVersion Parse( string versionString, bool patchOptional )
+        public static SemanticVersion Parse( string versionString, SemanticVersionParseOptions options )
         {
-            var match = SemVersionRegEx.Match( versionString );
-            if( !match.Success )
-                throw new FormatException();
-            
-            var major = int.Parse( match.Groups["Major"].Value );
-            var minor = int.Parse( match.Groups["Minor"].Value );
-            int patch = 0;
-            var patchGroup =  match.Groups["Patch"];
-            if( !patchOptional || patchGroup.Success )
-                patch = int.Parse( patchGroup.Value );
-
-            var preReleaseGroup = match.Groups["PreRelease"];
-            var preReleaseParts = new string[ 0 ];
-            if( preReleaseGroup.Success )
-                preReleaseParts = preReleaseGroup.Value.Split( '.' );
-
-            var metadataGroup = match.Groups["Metadata"];
-            var metadataParts = new string[ 0 ];
-            if( metadataGroup.Success )
-                metadataParts = metadataGroup.Value.Split( '.' );
-
-            return new SemanticVersion( major, minor, patch, preReleaseParts, metadataParts );
+            try
+            {
+                var parser = SemanticVersionParser( options.HasFlag( SemanticVersionParseOptions.PatchOptional ) );
+                return parser.Parse( versionString );
+            }
+            catch( ParseException ex )
+            {
+                throw new FormatException("Invalid SemanticVersion", ex);
+            }
         }
 
         /// <summary>Attempts to parse a version string into a new SemanticVersion instance</summary>
         /// <param name="versionString">String to parse</param>
         /// <param name="version">Version instance to construct</param>
         /// <returns>true if the string is a valid semantic version string that was successfully parsed into <paramref name="version"/></returns>
-        public static bool TryParse( string versionString, out SemanticVersion version )
+        public static bool TryParse( string versionString, out SemanticVersion version)
+        {
+            return TryParse( versionString, SemanticVersionParseOptions.None, out version );
+        }
+
+        /// <summary>Attempts to parse a version string into a new SemanticVersion instance</summary>
+        /// <param name="versionString">String to parse</param>
+        /// <param name="options">Options flags to control parsing variants and ambiguities in the spec</param>
+        /// <param name="version">Version instance to construct</param>
+        /// <returns>true if the string is a valid semantic version string that was successfully parsed into <paramref name="version"/></returns>
+        public static bool TryParse( string versionString, SemanticVersionParseOptions options, out SemanticVersion version )
         {
             version = new SemanticVersion();
-            var match = SemVersionRegEx.Match( versionString );
-            if( !match.Success )
-                return false;
-            
-            int major,minor,patch;
-
-            if( !int.TryParse( match.Groups["Major"].Value, out major ) )
+            var parser = SemanticVersionParser( options.HasFlag( SemanticVersionParseOptions.PatchOptional ) );
+            var result = parser.TryParse( versionString );
+            if( !result.WasSuccessful )
                 return false;
 
-            if( !int.TryParse( match.Groups["Minor"].Value, out minor ) )
-                return false;
-
-            if( !int.TryParse( match.Groups["Patch"].Value, out patch ) )
-                return false;
-
-            var preReleaseGroup = match.Groups[ "PreRelease" ];
-            var preReleaseParts = new string[ 0 ];
-            if( preReleaseGroup.Success )
-                preReleaseParts = preReleaseGroup.Value.Split( '.' );
-
-            var metadataGroup = match.Groups[ "Metadata" ];
-            var metadataParts = new string[ 0 ];
-            if( metadataGroup.Success )
-                metadataParts = metadataGroup.Value.Split( '.' );
-
-            version = new SemanticVersion(major, minor, patch, preReleaseParts, metadataParts );
+            version = result.Value;
             return true;
         }
 
@@ -346,7 +304,7 @@ namespace CMSIS.Pack
         /// <param name="lhs">Left hand side of the comparison</param>
         /// <param name="rhs">Right hand side of the comparison</param>
         /// <returns><see langword="true"/> if the two versions are equivalent</returns>
-        public static bool operator==(SemanticVersion lhs, SemanticVersion rhs)
+        public static bool operator ==( SemanticVersion lhs, SemanticVersion rhs )
         {
             return lhs.Equals( rhs );
         }
@@ -360,40 +318,107 @@ namespace CMSIS.Pack
             return !lhs.Equals( rhs );
         }
 
-        private static bool ValidateIdentifierParts( IEnumerable< string > metadataParts )
+        private static bool ValidateIdentifierParts( IEnumerable<string> metadataParts )
         {
             var q = from part in metadataParts
-                    let match = IdentifierRegEx.Match( part )
-                    where !match.Success || match.Index != 0 || match.Length != part.Length
+                    let result = Identifier.End().TryParse( part )
+                    where !result.WasSuccessful
                     select part;
-            return !q.Any();
+            return !q.Any( );
         }
 
-        private int ComputeHashCode()
-        {
-            return ToString( false ).GetHashCode( );
-        }
-        
+        private int ComputeHashCode( ) => ToString( false ).GetHashCode( );
+
         // this is intentionally not a read-only field
         // its a private field and used like a C++ mutable.
         // It caches the HashCode that's expensive to compute
         // so it is only done once.
         private int? HashCode;
 
-        private static readonly Regex IdentifierRegEx = new Regex("[1-9A-Za-z-][0-9A-Za-z-]*");
+        // When using the default constructor the pre-release and build meta arrays will be null
+        // The property accessors for those arrays will test for null and use this singleton empty
+        // array if null to prevent null reference issues.
+        static readonly string[] EmptyStringArray = new string [0];
 
-        // see: http://semver.org/
-        // Semantic version is:
-        // Major'.'Minor'.'Patch('-'Identifier('.'Identifier)*)?('+'Identifier('.'Identifier)*)?
-        // Where Major,Minor and Patch match 0|[1-9][0-9]* (0 or a non-leading zero sequence of digits)
-        // Identifier is a sequence of ASCII alphanumerics or '-' without a leading 0
-        // the - signifies the pre-release information and impacts precedence if present
-        // the + signifies the build meta data and has no impact on precedence
-        private const string SemVerRegExPattern = "(?<Major>(0|[1-9][0-9]*))"
-                                                + @"\.(?<Minor>(0|[1-9][0-9]*))"
-                                                + @"(\.(?<Patch>(0|[1-9][0-9]*)))?"
-                                                + @"(-(?<PreRelease>[1-9A-Za-z-][0-9A-Za-z-]*(\.[1-9A-Za-z-][0-9A-Za-z-]*)*))?"
-                                                + @"(\+(?<Metadata>[1-9A-Za-z-][0-9A-Za-z-]*(\.[1-9A-Za-z-][0-9A-Za-z-]*)*))?";
-        private static readonly Regex SemVersionRegEx = new Regex(SemVerRegExPattern);
+        #region static parsers
+        private static bool IsAnyIdentifierChar( char c ) => ( char.IsLetterOrDigit( c ) && c < 127) || c == '-';
+        private static bool IsNonDigitIdentifierChar( char c ) => ( char.IsLetter( c ) && c < 127 ) || c== '-';
+
+        private static Parser<char> NonZeroDigit = Sprache.Parse.Chars('1','2','3','4','5','6','7','8','9');
+
+        private static Parser<IEnumerable<char>> NonLeadingZeroDigits = NonZeroDigit.AtLeastOnce().Concat( Sprache.Parse.Digit.Many() );
+
+        private static Parser<int> NonLeadingZeroInteger = from value in NonLeadingZeroDigits.Text()
+                                                           select int.Parse(value);
+
+        private static Parser<int> ZeroOrNonLeadingZeroInteger = Sprache.Parse.Char('0').Return( 0 )
+                                                                              .Or( NonLeadingZeroInteger );
+
+        private static Parser<char> IdentifierChar = Sprache.Parse.Char( IsAnyIdentifierChar, "ASCII alphanumeric or hyphen");
+        private static Parser<char> NonDigitIdentifierChar = Sprache.Parse.Char( IsNonDigitIdentifierChar, "Non digit alphanumeric ASCII or hyphen");
+
+        private static Parser<char> Dot = Sprache.Parse.Char('.');
+
+        // SPEC AMBIGUITY: Rule 9 states "Numeric identifiers MUST NOT include leading zeroes" but fails to specify
+        // a definition of NumericIdentifier. It's reasonable to presume that it is intended to mean an all numeric
+        // identifier thus '01234' is invalid, but what about '0abcd'? 
+        // This implementation presumes that an identifier that is not all digits can contain a leading 0 as that
+        // is the most literal interpretation of the spec and also is a fairly reasonable one. Especially, given the
+        // precedence rule 11 where it effectively defines a Numeric Identifier as one that is all digits for the
+        // purposes of establishing precedence. 
+        private static Parser<string> NumericIdentifier = NonLeadingZeroDigits.Text();
+        private static Parser<string> AlphaNumericIdentifier = NonDigitIdentifierChar.AtLeastOnce().Concat( IdentifierChar.Many() ).Text();
+
+        private static Parser<string> Identifier = NumericIdentifier.Or( AlphaNumericIdentifier );
+        private static Parser<string[]> IdentifierSequence = from seq in Identifier.DelimitedBy( Dot )
+                                                             select seq.ToArray();
+
+        private static Parser<string[]> PreRelease = from sep in Sprache.Parse.Char('-').Once()
+                                                     from ident in IdentifierSequence
+                                                     select ident;
+
+        private static Parser<string[]> BuildMeta = from sep in Sprache.Parse.Char('+').Once()
+                                                    from ident in IdentifierSequence
+                                                    select ident;
+
+        private static Parser<int> BuildIntegerWithSep = from sep in Dot
+                                                         from patch in ZeroOrNonLeadingZeroInteger
+                                                         select patch;
+
+        private static Parser<int> BuildInteger( bool optional )
+        {
+            if( !optional )
+            {
+                return BuildIntegerWithSep;
+            }
+            else
+            {
+                return i =>
+                {
+                    if( i.AtEnd )
+                        return Result.Success( 0, i );
+
+                    var parser = BuildIntegerWithSep.Optional( );
+                    var result = parser( i );
+                    return Result.Success( result.Value.GetOrDefault(), result.Remainder );
+                };
+            }
+        }
+
+        private static Parser<SemanticVersion> SemanticVersionParser( bool patchOptional )
+        {
+            return from major in ZeroOrNonLeadingZeroInteger
+                   from minor in BuildInteger( optional: false )
+                   from patch in BuildInteger( optional: patchOptional )
+                   from preRelease in PreRelease.Optional()
+                   from buildMetadata in BuildMeta.Optional()
+                   select new SemanticVersion( major
+                                             , minor
+                                             , patch
+                                             , preRelease.GetOrDefault()
+                                             , buildMetadata.GetOrDefault()
+                                             );
+        }
+        #endregion
     }
 }

@@ -1,13 +1,12 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
     public partial class ProcessorType {
-    
-        private string pnameField;
     
         private DcoreEnum dcoreField;
     
@@ -30,18 +29,16 @@ namespace CMSIS.Pack.PackDescription
         private bool dclockFieldSpecified;
     
         private string dcoreVersionField;
-    
+
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string Pname {
-            get {
-                return pnameField;
-            }
-            set {
-                pnameField = value;
-            }
+        [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string ProcessorName
+        {
+            get { return ProcessorName_; }
+            set { ProcessorName_ = Parsers.RestrictedString.Parse( value ); }
         }
-    
+        private string ProcessorName_;
+
         /// <remarks/>
         [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
         public DcoreEnum Dcore {
