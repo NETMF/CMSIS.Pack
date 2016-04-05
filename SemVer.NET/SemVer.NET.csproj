@@ -39,6 +39,8 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Grammar.cs" />
+    <Compile Include="ParseResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SemanticVersion.cs" />
   </ItemGroup>

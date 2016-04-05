@@ -43,7 +43,7 @@ namespace CMSIS.Pack.PackDescription
             get { return ApiVersion.ToString(); }
             set
             {
-                ApiVersion = SemanticVersion.Parse( value, SemanticVersionOptions.PatchOptional );
+                ApiVersion = SemanticVersion.Parse( value, ParseOptions.PatchOptional );
             }
         }
 

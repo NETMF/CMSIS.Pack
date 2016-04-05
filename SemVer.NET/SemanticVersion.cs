@@ -7,24 +7,30 @@ using Sprache;
 
 namespace SemVer.NET
 {
+    /// <summary>Option flags for parsing a semantic version string</summary>
     [Flags]
-    public enum SemanticVersionOptions
+    public enum ParseOptions
     {
+        /// <summary>No special handling, parsing proceeds according to Semantic Version Specification</summary>
         None = 0,
+        /// <summary>Patch build number is optional, and if not present in the string a default of "0" is assumed</summary>
         PatchOptional = 1,
-        //...
-        // TODO: Add options to allow build metadata in precedence checks
-        //       see: https://github.com/mojombo/semver/issues/200
-        // 
+        /// <summary>Allow a leading 'v' or 'V' as a common convention for version numbers</summary>
+        AllowLeadingV = 2,
     }
+
+    // TODO: Add additional Comparer<SemanticVersion> implementation to handle build metadata in precedence
+    //       see: https://github.com/mojombo/semver/issues/200
+    // 
 
     /// <summary>Version structure for versions based on Semantic Versioning v2.0 as defined by https://github.com/mojombo/semver/blob/master/semver.md </summary>
     /// <remarks>
-    /// This class implements creating, parsing and comparing semantic version values. In
+    /// <para>This class implements creating, parsing and comparing semantic version values. In
     /// addition to the standard support, this class includes an additional optional optimization
     /// where parsing a version string can assume a default patch value of 0 if none is specified.
     /// According to the formal Semantic Versioning v2.0 spec. the patch value is required, however
-    /// some real world applications allow the looser definition.
+    /// some real world applications allow the looser definition.</para>
+    /// <para>Technically the Major, Minor, and Patch numbers have no length limits, thus this uses</para>
     /// </remarks>
     public struct SemanticVersion
         : IComparable
@@ -35,7 +41,7 @@ namespace SemVer.NET
         /// <param name="major">Major version number</param>
         /// <param name="minor">Minor Version number</param>
         /// <param name="patch">Patch version number</param>
-        /// <param name="preReleaseParts">Array of individual pre-release parts (not including the separating '.')</param>
+        /// <param name="preReleaseParts">Array of individual prerelease parts (not including the separating '.')</param>
         /// <param name="metadataParts">Array of individual Build Metadata parts (not including the separating '.')</param>
         public SemanticVersion( int major, int minor, int patch, IEnumerable<string> preReleaseParts, IEnumerable<string> metadataParts )
         {
@@ -56,7 +62,7 @@ namespace SemVer.NET
 
             // Validate each part conforms to an "identifier" as defined by the spec
             if( !ValidatePrereleaseIdentifierParts( PreReleaseParts_ ) )
-                throw new ArgumentException( "Invalid identifier for pre-release part", nameof( preReleaseParts ) );
+                throw new ArgumentException( "Invalid identifier for prerelease part", nameof( preReleaseParts ) );
 
             if( !ValidateBuildIdentifierParts( BuildMetadata_ ) )
                 throw new ArgumentException( "Invalid identifier for build metadata part", nameof( metadataParts ) );
@@ -81,7 +87,7 @@ namespace SemVer.NET
         /// <summary>Indicates if this version is a development version (e.g. Major Version == 0 )</summary>
         public bool IsDevelopment => Major == 0;
 
-        /// <summary>Indicates if this version is a pre-release version (e.g. IsDevelopment or Has pre-release parts following the Patch)</summary>
+        /// <summary>Indicates if this version is a prerelease version (e.g. IsDevelopment or Has prerelease parts following the Patch)</summary>
         public bool IsPrerelease => IsDevelopment || PreReleaseParts.Count > 0;
 
         /// <summary>Indicates if this is a valid version</summary>
@@ -95,6 +101,24 @@ namespace SemVer.NET
 
         /// <summary>Patch version number</summary>
         public int Patch { get; }
+
+        /// <summary>List of identifier parts forming the prerelease value</summary>
+        /// <remarks>
+        /// Prerelease values are optional and follow the patch with a '-'. The prerelease
+        /// value can consist of multiple parts separated by a '.', this list contains the
+        /// individual parts without the leading '-' or separating '.'. 
+        /// </remarks>
+        public IReadOnlyList<string> PreReleaseParts => Array.AsReadOnly( PreReleaseParts_ ?? EmptyStringArray );
+        private readonly string[ ] PreReleaseParts_;
+
+        /// <summary>List of identifier parts forming the build Metadata value</summary>
+        /// <remarks>
+        /// Metadata values are optional and follow the patch with a '+'. The Metadata
+        /// value can consist of multiple parts separated by a '.', this list contains
+        /// the individual parts without the leading '+' or separating '.'. 
+        /// </remarks>
+        public IReadOnlyList<string> BuildMetadata => Array.AsReadOnly( BuildMetadata_ ?? EmptyStringArray );
+        private readonly string[ ] BuildMetadata_;
 
         /// <inheritdoc/>
         public override int GetHashCode( )
@@ -122,10 +146,7 @@ namespace SemVer.NET
         }
 
         /// <inheritdoc/>
-        public bool Equals( SemanticVersion other )
-        {
-            return 0 == CompareTo( other );
-        }
+        public bool Equals( SemanticVersion other ) => 0 == CompareTo( other );
 
         /// <inheritdoc/>
         public int CompareTo( object obj )
@@ -142,16 +163,16 @@ namespace SemVer.NET
         // identifiers from left to right as follows:
         // 1) Major, minor, and patch versions are always compared numerically.
         // Example: 1.0.0 < 2.0.0 < 2.1.0 < 2.1.1.
-        // 2) When major, minor, and patch are equal, a pre-release version has lower
+        // 2) When major, minor, and patch are equal, a prerelease version has lower
         // precedence than a normal version.
         // Example: 1.0.0-alpha < 1.0.0.
-        // 3) Precedence for two pre-release versions with the same major, minor, and
+        // 3) Precedence for two prerelease versions with the same major, minor, and
         // patch version MUST be determined by comparing each dot separated identifier
         // from left to right until a difference is found as follows:
         //     a) identifiers consisting of only digits are compared numerically
         //     b) identifiers with letters or hyphens are compared lexically in ASCII sort order.
         //     c) Numeric identifiers always have lower precedence than non-numeric identifiers.
-        //     d) A larger set of pre-release fields has a higher precedence than a smaller set,
+        //     d) A larger set of prerelease fields has a higher precedence than a smaller set,
         //        if all of the preceding identifiers are equal.
         // Example: 1.0.0-alpha < 1.0.0-alpha.1 < 1.0.0-alpha.beta < 1.0.0-beta < 1.0.0-beta.2 < 1.0.0-beta.11 < 1.0.0-rc.1 < 1.0.0.
         /// <inheritdoc/>
@@ -204,24 +225,6 @@ namespace SemVer.NET
             return PreReleaseParts.Count.CompareTo( other.PreReleaseParts.Count );
         }
 
-        /// <summary>List of identifier parts forming the pre-release value</summary>
-        /// <remarks>
-        /// Pre-release values are optional and follow the patch with a '-'. The pre-release
-        /// value can consist of multiple parts separated by a '.', this list contains the
-        /// individual parts without the leading '-' or separating '.'. 
-        /// </remarks>
-        public IReadOnlyList<string> PreReleaseParts => Array.AsReadOnly( PreReleaseParts_ ?? EmptyStringArray );
-        private readonly string[ ] PreReleaseParts_;
-
-        /// <summary>List of identifier parts forming the build Metadata value</summary>
-        /// <remarks>
-        /// Metadata values are optional and follow the patch with a '+'. The Metadata
-        /// value can consist of multiple parts separated by a '.', this list contains
-        /// the individual parts without the leading '+' or separating '.'. 
-        /// </remarks>
-        public IReadOnlyList<string> BuildMetadata => Array.AsReadOnly( BuildMetadata_ ?? EmptyStringArray );
-        private readonly string[ ] BuildMetadata_;
-
         /// <inheritdoc/>
         public override string ToString( ) => ToString( true );
 
@@ -254,7 +257,7 @@ namespace SemVer.NET
         /// <summary>Parse a semantic version string into it's component parts</summary>
         /// <param name="versionString">String containing the version to parse</param>
         /// <returns>Parsed version details</returns>
-        public static SemanticVersion Parse( string versionString ) => Parse( versionString, SemanticVersionOptions.None );
+        public static SemanticVersion Parse( string versionString ) => Parse( versionString, ParseOptions.None );
 
         /// <summary>Parse a semantic version string into it's component parts</summary>
         /// <param name="versionString">String containing the version to parse</param>
@@ -264,16 +267,16 @@ namespace SemVer.NET
         /// This overload of Parse allows for a non-standard version where the Patch value
         /// defaults to 0 if not present, instead of triggering an exception.
         /// </remarks>
-        public static SemanticVersion Parse( string versionString, SemanticVersionOptions options )
+        public static SemanticVersion Parse( string versionString, ParseOptions options )
         {
             try
             {
-                var parts = SemanticVersionParser.Parse( versionString );
+                var parts = Grammar.SemanticVersion.Parse( versionString );
                 return new SemanticVersion( parts, options );
             }
             catch( ParseException ex )
             {
-                throw new FormatException("Invalid SemanticVersion", ex);
+                throw new FormatException("Invalid SemanticVersion", ex );
             }
         }
 
@@ -281,20 +284,17 @@ namespace SemVer.NET
         /// <param name="versionString">String to parse</param>
         /// <param name="version">Version instance to construct</param>
         /// <returns>true if the string is a valid semantic version string that was successfully parsed into <paramref name="version"/></returns>
-        public static bool TryParse( string versionString, out SemanticVersion version)
-        {
-            return TryParse( versionString, SemanticVersionOptions.None, out version );
-        }
+        public static bool TryParse( string versionString, out SemanticVersion version ) => TryParse( versionString, ParseOptions.None, out version );
 
         /// <summary>Attempts to parse a version string into a new SemanticVersion instance</summary>
         /// <param name="versionString">String to parse</param>
         /// <param name="options">Options flags to control parsing variants and ambiguities in the spec</param>
         /// <param name="version">Version instance to construct</param>
         /// <returns>true if the string is a valid semantic version string that was successfully parsed into <paramref name="version"/></returns>
-        public static bool TryParse( string versionString, SemanticVersionOptions options, out SemanticVersion version )
+        public static bool TryParse( string versionString, ParseOptions options, out SemanticVersion version )
         {
             version = new SemanticVersion();
-            var result = SemanticVersionParser.TryParse( versionString );
+            var result = Grammar.SemanticVersion.TryParse( versionString );
             if( !result.WasSuccessful )
                 return false;
 
@@ -306,24 +306,18 @@ namespace SemVer.NET
         /// <param name="lhs">Left hand side of the comparison</param>
         /// <param name="rhs">Right hand side of the comparison</param>
         /// <returns><see langword="true"/> if the two versions are equivalent</returns>
-        public static bool operator ==( SemanticVersion lhs, SemanticVersion rhs )
-        {
-            return lhs.Equals( rhs );
-        }
+        public static bool operator ==( SemanticVersion lhs, SemanticVersion rhs ) => lhs.Equals( rhs );
 
         /// <summary>Compares two <see cref="SemanticVersion"/> instances for inequality</summary>
         /// <param name="lhs">Left hand side of the comparison</param>
         /// <param name="rhs">Right hand side of the comparison</param>
         /// <returns><see langword="true"/> if the two versions are not equivalent</returns>
-        public static bool operator !=( SemanticVersion lhs, SemanticVersion rhs )
-        {
-            return !lhs.Equals( rhs );
-        }
+        public static bool operator !=( SemanticVersion lhs, SemanticVersion rhs ) => !lhs.Equals( rhs );
 
         private static bool ValidateBuildIdentifierParts( IEnumerable<string> metadataParts )
         {
             var q = from part in metadataParts
-                    let result = BuildIdentifier.End().TryParse( part )
+                    let result = Grammar.BuildIdentifier.End().TryParse( part )
                     where !result.WasSuccessful
                     select part;
             return !q.Any( );
@@ -332,7 +326,7 @@ namespace SemVer.NET
         private static bool ValidatePrereleaseIdentifierParts( IEnumerable<string> metadataParts )
         {
             var q = from part in metadataParts
-                    let result = PrereleaseIdentifier.End( ).TryParse( part )
+                    let result = Grammar.PrereleaseIdentifier.End( ).TryParse( part )
                     where !result.WasSuccessful
                     select part;
             return !q.Any( );
@@ -346,113 +340,24 @@ namespace SemVer.NET
         // so it is only done once.
         private int? HashCode;
 
-        // When using the default constructor the pre-release and build meta arrays will be null
+        // When using the default constructor the prerelease and build meta arrays will be null
         // The property accessors for those arrays will test for null and use this singleton empty
         // array if null to prevent null reference issues.
         static readonly string[] EmptyStringArray = new string [0];
 
-        private SemanticVersion( ParseResult parts, SemanticVersionOptions options )
-            : this( parts.Major
-                  , parts.Minor
-                  , parts.Patch.GetOrDefault( )
+        private SemanticVersion( ParseResult parts, ParseOptions options )
+            : this( int.Parse( parts.Major )
+                  , int.Parse( parts.Minor )
+                  , string.IsNullOrWhiteSpace( parts.Patch ) ? 0 : int.Parse( parts.Patch )
                   , parts.Prerelease
                   , parts.BuildMetadata
                   )
         {
-            if( !options.HasFlag( SemanticVersionOptions.PatchOptional ) && !parts.Patch.IsDefined )
+            if( !options.HasFlag( ParseOptions.PatchOptional ) && string.IsNullOrWhiteSpace( parts.Patch ) )
                 throw new FormatException( "Patch component of Semantic Version is required" );
+
+            if( !options.HasFlag( ParseOptions.AllowLeadingV ) && parts.LeadingV.HasValue )
+                throw new FormatException( "Leading 'v' characters not supported in SemanticVersion. Use ParseOptions.AllowLeadingV to enable this non-standard extension" );
         }
-
-        #region static parsers
-        // For full details of the syntax (including formal BNF grammar)
-        // see: https://github.com/mojombo/semver/blob/master/semver.md
-
-        private class ParseResult
-        {
-            internal ParseResult( int major
-                                , int minor
-                                , IOption<int> patch
-                                , IOption<IEnumerable<string>> prereleaseParts
-                                , IOption<IEnumerable<string>> buildParts
-                                )
-            {
-                Major = major;
-                Minor = minor;
-                Patch = patch;
-                Prerelease = prereleaseParts.GetOrElse( Enumerable.Empty<string>() );
-                BuildMetadata = buildParts.GetOrElse( Enumerable.Empty<string>() );
-            }
-
-            internal int Major { get; }
-            internal int Minor { get; }
-            internal IOption<int> Patch { get; }
-            internal IEnumerable<string> Prerelease { get; }
-            internal IEnumerable<string> BuildMetadata { get; }
-        }
-
-        private static Parser<char> Range( char start, char end ) => Sprache.Parse.Chars( Enumerable.Range( start, end ).Select( i=>(char)i ).ToArray() );
-        
-        private static Parser<char> Dot = Sprache.Parse.Char('.');
-        private static Parser<char> Zero = Sprache.Parse.Char( '0' );
-        private static Parser<char> Dash = Sprache.Parse.Char( '-' );
-
-        private static Parser<char> StartBuild = Sprache.Parse.Char( '+' );
-        private static Parser<char> StartPreRelease = Dash;
-
-        private static Parser<char> Letter = Range('a','z').Or( Range('A','Z'));
-        private static Parser<char> NonDigit = Letter.Or( Dash );
-        private static Parser<char> NonZeroDigit = Range( '1', '9' );
-        private static Parser<char> Digit = Zero.Or( NonZeroDigit );
-        private static Parser<char> IdentifierChar = Digit.Or( NonDigit );
-
-        private static Parser<IEnumerable<char>> IdentifierCharacters = IdentifierChar.AtLeastOnce();
-        private static Parser<IEnumerable<char>> Digits = Digit.AtLeastOnce();
-
-        private static Parser<IEnumerable<char>> NumericIdentifier
-            = Zero.Once()
-             .Or( NonZeroDigit.Once().Concat( Digits ) )
-             .Or( NonZeroDigit.Once() );
-
-        private static Parser<IEnumerable<char>> AlphaNumericIdentifier
-            = IdentifierCharacters.Concat( NonDigit.Once().Concat( IdentifierCharacters ) )
-              .Or( IdentifierCharacters.Concat( NonDigit.Once() ) )
-              .Or( NonDigit.Once().Concat( IdentifierCharacters ) )
-              .Or( NonDigit.Once() );
-
-
-        private static Parser<string> BuildIdentifier = AlphaNumericIdentifier
-                                                       .Or( Digits )
-                                                       .Text();
-
-        private static Parser<IEnumerable<string>> DotSeparatedBuildIdentifiers = BuildIdentifier.DelimitedBy( Dot );
-
-
-        private static Parser<string> PrereleaseIdentifier = AlphaNumericIdentifier
-                                                             .Or( NumericIdentifier )
-                                                             .Text();
-
-        private static Parser<IEnumerable<string>> DotSeparatedReleaseIdentifiers = PrereleaseIdentifier.DelimitedBy( Dot );
-
-        private static Parser<int> BuildNumber = from numString in NumericIdentifier.Text()
-                                                 select int.Parse( numString );
-
-        private static Parser<ParseResult> SemanticVersionParser
-            = from major in BuildNumber
-              from sep1 in Dot
-              from minor in BuildNumber
-              from patch in ( from sep2 in Dot
-                              from patchValue in BuildNumber
-                              select patchValue
-                            ).Optional()
-              from preRelease in ( from start in StartPreRelease
-                                   from preRelIds in DotSeparatedReleaseIdentifiers
-                                   select preRelIds
-                                 ).Optional()
-              from buildMetadata in ( from start in StartBuild
-                                      from buildIds in DotSeparatedBuildIdentifiers
-                                      select buildIds
-                                    ).Optional()
-              select new ParseResult( major, minor, patch, preRelease, buildMetadata );
-        #endregion
     }
 }
