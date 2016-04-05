@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CMSIS.Pack.PackDescription;
+using SemVer.NET;
 
 namespace CMSIS.Pack
 {

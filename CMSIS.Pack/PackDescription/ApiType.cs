@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
+using SemVer.NET;
 
 namespace CMSIS.Pack.PackDescription
 {

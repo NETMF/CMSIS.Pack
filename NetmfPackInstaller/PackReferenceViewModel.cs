@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight;
 using System;
 using System.Threading.Tasks;
 using CMSIS.Pack.PackDescription;
+using SemVer.NET;
 
 namespace NetmfPackInstaller
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CMSIS.Pack;
+using SemVer.NET;
 
 namespace UnitTests
 {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using Sprache;
 
-namespace CMSIS.Pack
+namespace SemVer.NET
 {
     [Flags]
     public enum SemanticVersionOptions

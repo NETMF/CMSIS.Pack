@@ -63,9 +63,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CMSIS.Pack\CMSIS.Pack.csproj">
-      <Project>{145d7231-c105-41be-b646-5d400097c744}</Project>
-      <Name>CMSIS.Pack</Name>
+    <ProjectReference Include="..\SemVer.NET\SemVer.NET.csproj">
+      <Project>{1fae553d-f158-4b0c-a935-09332ece2a51}</Project>
+      <Name>SemVer.NET</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

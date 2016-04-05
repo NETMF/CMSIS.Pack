@@ -1,6 +1,7 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using SemVer.NET;
 
 namespace CMSIS.Pack.PackDescription
 {

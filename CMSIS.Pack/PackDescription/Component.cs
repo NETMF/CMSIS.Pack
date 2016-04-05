@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
+using SemVer.NET;
 
 namespace CMSIS.Pack.PackDescription
 {
@@ -48,7 +49,6 @@ namespace CMSIS.Pack.PackDescription
 
         [XmlIgnore]
         public SemanticVersion ApiVersion { get; set; }
-
 
         /// <remarks/>
         [XmlAttribute( "condition", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
