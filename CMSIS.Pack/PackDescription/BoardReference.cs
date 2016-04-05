@@ -6,7 +6,7 @@ namespace CMSIS.Pack.PackDescription
 {
     /// <remarks/>
     [Serializable( )]
-    public partial class BoardReference
+    public class BoardReference
     {
         /// <remarks/>
         [XmlAttribute( "name", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]

@@ -6,7 +6,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class DebugVarsType {
+    public class DebugVarsType {
     
         private string configfileField;
     

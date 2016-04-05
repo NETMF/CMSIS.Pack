@@ -5,11 +5,11 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class DeviceType {
+    public class DeviceType {
     
         private ProcessorType[] processorField;
     
-        private DebugConfigType debugconfigField;
+        private DebugConfig debugconfigField;
     
         private CompileType[] compileField;
     
@@ -25,7 +25,7 @@ namespace CMSIS.Pack.PackDescription
     
         private EnvironmentType[] environmentField;
     
-        private DebugPortType[] debugportField;
+        private DebugPort[] debugportField;
     
         private DebugType[] debugField;
     
@@ -51,7 +51,7 @@ namespace CMSIS.Pack.PackDescription
         }
     
         /// <remarks/>
-        public DebugConfigType debugconfig {
+        public DebugConfig debugconfig {
             get {
                 return debugconfigField;
             }
@@ -139,7 +139,7 @@ namespace CMSIS.Pack.PackDescription
     
         /// <remarks/>
         [XmlElement( "debugport")]
-        public DebugPortType[] debugport {
+        public DebugPort[] debugport {
             get {
                 return debugportField;
             }

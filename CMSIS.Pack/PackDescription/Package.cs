@@ -9,7 +9,7 @@ namespace CMSIS.Pack.PackDescription
     [Serializable( )]
     [XmlType( AnonymousType=true )]
     [XmlRoot( Namespace="", ElementName ="package", IsNullable=true)]
-    public partial class Package
+    public class Package
     {
         [XmlElement("name")]
         public string Name { get; set; }
@@ -72,7 +72,7 @@ namespace CMSIS.Pack.PackDescription
         /// <remarks/>
         [XmlArrayItem( "condition", IsNullable=false)]
         [XmlArray( "conditions" )]
-        public ConditionType[] Conditions { get; set; }
+        public Condition[] Conditions { get; set; }
 
         /// <remarks/>
         [XmlArrayItem( "example", IsNullable=false)]

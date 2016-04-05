@@ -6,7 +6,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class TraceType {
+    public class TraceType {
     
         private SerialWireType[] serialwireField;
     

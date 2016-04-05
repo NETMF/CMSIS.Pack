@@ -7,7 +7,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class Algorithm
+    public class Algorithm
     {
         /// <remarks/>
         [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]

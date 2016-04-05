@@ -7,7 +7,7 @@ namespace CMSIS.Pack.PackDescription
     /// <remarks/>
     [Serializable( )]
     [XmlType( AnonymousType=true)]
-    public partial class ExampleProjectTypeEnvironment {
+    public class ExampleProjectTypeEnvironment {
     
         private string nameField;
     

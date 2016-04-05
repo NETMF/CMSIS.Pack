@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class GpdscFileType {
+    public class GpdscFileType {
     
         private string nameField;
     

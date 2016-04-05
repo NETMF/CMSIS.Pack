@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class GeneratorCommandArgumentType {
+    public class GeneratorCommandArgumentType {
     
         private string switchField;
     

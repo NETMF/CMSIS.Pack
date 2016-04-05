@@ -6,7 +6,7 @@ namespace CMSIS.Pack.PackDescription
 {
     /// <remarks/>
     [Serializable( )]
-    public partial class FileType {
+    public class FileType {
     
         private string conditionField;
     

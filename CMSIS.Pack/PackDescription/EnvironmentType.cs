@@ -6,7 +6,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class EnvironmentType {
+    public class EnvironmentType {
     
         private System.Xml.XmlElement[] anyField;
     

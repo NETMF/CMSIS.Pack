@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class Board
+    public class Board
     {
         /// <remarks/>
         [XmlElement( "description")]
@@ -29,7 +29,7 @@ namespace CMSIS.Pack.PackDescription
 
         /// <remarks/>
         [XmlElement( "debugInterface")]
-        public DebugInterfaceType[] DebugInterface { get; set; }
+        public DebugInterface[] DebugInterface { get; set; }
 
         /// <remarks/>
         [XmlElement( "book")]

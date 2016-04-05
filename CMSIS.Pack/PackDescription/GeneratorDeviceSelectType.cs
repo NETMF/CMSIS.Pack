@@ -6,7 +6,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class GeneratorDeviceSelectType {
+    public class GeneratorDeviceSelectType {
     
         private DeviceVendorEnum dvendorField;
     

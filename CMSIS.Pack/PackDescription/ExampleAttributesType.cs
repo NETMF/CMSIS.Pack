@@ -6,7 +6,7 @@ namespace CMSIS.Pack.PackDescription
 {
     /// <remarks/>
     [Serializable( )]
-    public partial class ExampleAttributesType
+    public class ExampleAttributesType
     {
     
         private object[] itemsField;
@@ -15,7 +15,7 @@ namespace CMSIS.Pack.PackDescription
     
         /// <remarks/>
         [XmlElement( "category", typeof(string))]
-        [XmlElement( "component", typeof(ComponentCategoryType))]
+        [XmlElement( "component", typeof(ComponentCategory))]
         [XmlElement( "keyword", typeof(string))]
         [XmlChoiceIdentifier( "ItemsElementName")]
         public object[] Items {

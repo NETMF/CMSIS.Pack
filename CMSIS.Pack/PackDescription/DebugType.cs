@@ -6,9 +6,9 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class DebugType {
+    public class DebugType {
     
-        private DataPatchType[] datapatchField;
+        private DebugDataPatch[] datapatchField;
     
         private uint @__dpField;
     
@@ -24,7 +24,7 @@ namespace CMSIS.Pack.PackDescription
     
         /// <remarks/>
         [XmlElement( "datapatch")]
-        public DataPatchType[] datapatch {
+        public DebugDataPatch[] datapatch {
             get {
                 return datapatchField;
             }

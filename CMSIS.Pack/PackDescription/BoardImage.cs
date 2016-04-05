@@ -6,7 +6,7 @@ namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
     [XmlType( AnonymousType=true)]
-    public partial class BoardImage
+    public class BoardImage
     {
         /// <remarks/>
         [XmlAttribute( "small", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]

@@ -7,7 +7,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class MemoryType {
+    public class MemoryType {
     
         private MemoryIDTypeEnum idField;
     

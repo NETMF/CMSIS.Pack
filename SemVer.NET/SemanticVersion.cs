@@ -25,7 +25,7 @@ namespace SemVer.NET
 
     /// <summary>Version structure for versions based on Semantic Versioning v2.0 as defined by https://github.com/mojombo/semver/blob/master/semver.md </summary>
     /// <remarks>
-    /// <para>This class implements creating, parsing and comparing semantic version values. In
+    /// <para>This class implements creating, parsing, and comparing semantic version values. In
     /// addition to the standard support, this class includes an additional optional optimization
     /// where parsing a version string can assume a default patch value of 0 if none is specified.
     /// According to the formal Semantic Versioning v2.0 spec. the patch value is required, however

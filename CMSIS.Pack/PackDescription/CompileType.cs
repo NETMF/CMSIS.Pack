@@ -6,7 +6,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class CompileType
+    public class CompileType
     {
         /// <remarks/>
         [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]

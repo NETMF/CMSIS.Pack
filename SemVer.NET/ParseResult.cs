@@ -11,9 +11,8 @@ namespace SemVer.NET
     /// such as found in CSemVer and also can handle simple Major.minor versions
     /// (e.g. without any patch number). Ultimately, it is up to the class consuming
     /// the result to determine the behavior it allows</para>
-    /// <para>The numeric parts are left as strings
-    /// since, technically they can be any length. Though practically speaking a
-    /// 32bit integer is generally considered enough.</para>
+    /// <para>The numeric parts are left as strings since, technically they can be any
+    /// length. Though practically speaking a 32bit integer is generally considered enough.</para>
     /// </remarks>
     public class ParseResult
     {
@@ -57,7 +56,7 @@ namespace SemVer.NET
 
         /// <summary>Gets a potentially <see langword="null"/> leading 'v' or 'V' character</summary>
         /// <remarks>
-        /// Technically a Semantic version number does not include a leading character,
+        /// Technically, a Semantic version number does not include a leading character,
         /// however, many common uses of version numbers use one by convention. This,
         /// can be tested for <see langword="null"/> and trigger an exception if the
         /// leading character is provided but strict conformance to the specification
@@ -73,7 +72,7 @@ namespace SemVer.NET
 
         /// <summary>Gets a string containing the digits of the Patch version number  or an empty string if none was provided</summary>
         /// <remarks>
-        /// Technically a correct Semantic Version requires the Patch value. However, to gracefully handle
+        /// Technically, a correct Semantic Version requires the Patch value. However, to gracefully handle
         /// some real world erroneously versioned packages the grammar used in this library treats it as
         /// optional. The consumer, such as <see cref="SemanticVersion"/> can detect if the patch is not
         /// provided by calling <see cref="string.IsNullOrWhiteSpace(string)"/> and throwing an exception

@@ -7,7 +7,7 @@ namespace CMSIS.Pack.PackDescription
 {
     /// <remarks/>
     [Serializable( )]
-    public partial class Release
+    public class Release
     {
         /// <remarks/>
         [XmlAttribute( "version", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
@@ -17,7 +17,7 @@ namespace CMSIS.Pack.PackDescription
             get { return Version.ToString( ); }
             set
             {
-                Version = SemanticVersion.Parse( value, ParseOptions.PatchOptional );
+                Version = SemanticVersion.Parse( value );
             }
         }
 

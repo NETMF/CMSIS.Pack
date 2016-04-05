@@ -6,7 +6,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class BoardFeature
+    public class BoardFeature
     {
         /// <remarks/>
         [XmlAttribute("type", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]

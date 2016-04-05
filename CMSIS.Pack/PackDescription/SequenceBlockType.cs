@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class SequenceBlockType {
+    public class SequenceBlockType {
     
         private bool atomicField;
     

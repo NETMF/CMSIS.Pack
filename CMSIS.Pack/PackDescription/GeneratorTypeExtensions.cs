@@ -5,7 +5,7 @@ namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
     [XmlType( AnonymousType=true)]
-    public partial class GeneratorTypeExtensions {
+    public class GeneratorTypeExtensions {
     
         private System.Xml.XmlElement[] anyField;
     

@@ -6,7 +6,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class FilterType {
+    public class FilterType {
     
         private string dfamilyField;
     

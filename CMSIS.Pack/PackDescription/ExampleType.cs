@@ -12,7 +12,7 @@ namespace CMSIS.Pack.PackDescription
     [Serializable( )]
     [DebuggerStepThrough( )]
     [DesignerCategory( "code")]
-    public partial class ExampleType {
+    public class ExampleType {
     
         private string descriptionField;
     

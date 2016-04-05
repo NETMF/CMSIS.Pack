@@ -6,7 +6,7 @@ using Sprache;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class ProcessorType {
+    public class ProcessorType {
     
         private DcoreEnum dcoreField;
     

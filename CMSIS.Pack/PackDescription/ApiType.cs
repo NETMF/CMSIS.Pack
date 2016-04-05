@@ -7,7 +7,7 @@ using SemVer.NET;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class ApiType
+    public class ApiType
     {
         public ApiType()
         {
@@ -43,7 +43,7 @@ namespace CMSIS.Pack.PackDescription
             get { return ApiVersion.ToString(); }
             set
             {
-                ApiVersion = SemanticVersion.Parse( value, ParseOptions.PatchOptional );
+                ApiVersion = SemanticVersion.Parse( value );
             }
         }
 

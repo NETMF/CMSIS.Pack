@@ -43,6 +43,7 @@ namespace CMSIS.Pack.PackDescription
             get { return Version.ToString( ); }
             set
             {
+                // NOTE: Gracefully handle some real-world PDSC files with simple versions
                 Version = SemanticVersion.Parse( value, ParseOptions.PatchOptional );
             }
         }

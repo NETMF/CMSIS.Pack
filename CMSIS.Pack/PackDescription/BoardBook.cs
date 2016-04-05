@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class BoardBook
+    public class BoardBook
     {
         /// <remarks/>
         [XmlAttribute( "category", Form=System.Xml.Schema.XmlSchemaForm.Qualified)]

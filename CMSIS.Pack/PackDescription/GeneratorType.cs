@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class GeneratorType {
+    public class GeneratorType {
     
         private string descriptionField;
     

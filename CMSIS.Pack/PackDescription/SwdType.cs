@@ -5,7 +5,7 @@ using System.Xml.Serialization;
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public partial class SwdType {
+    public class SwdType {
     
         private string idcodeField;
     

@@ -6,7 +6,7 @@ namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
     [XmlType( AnonymousType = true )]
-    public partial class Bundle 
+    public class Bundle 
         : ComponenOrBundleGroup
     {
         /// <remarks/>
