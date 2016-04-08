@@ -28,7 +28,7 @@ namespace CMSIS.Pack.PackDescription
     
         private DebugPort[] debugportField;
     
-        private DebugType[] debugField;
+        private Debug[] debugField;
     
         private TraceType[] traceField;
     
@@ -149,7 +149,7 @@ namespace CMSIS.Pack.PackDescription
     
         /// <remarks/>
         [XmlElement( "debug")]
-        public DebugType[] debug {
+        public Debug[] debug {
             get {
                 return debugField;
             }

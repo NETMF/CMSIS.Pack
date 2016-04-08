@@ -70,6 +70,10 @@ namespace SemVer.NET
         public static Parser<string> BuildNumber = NumericIdentifier.Text();
 
         /// <summary>Parser monad to parse a semantic version string into a <see cref="ParseResult"/></summary>
+        /// <remarks>
+        /// This parser allows for a number of variations of SemanticVersions in the wild by parsing a
+        /// superset of SemanticVersion
+        /// </remarks>
         public static Parser<ParseResult> SemanticVersion
             = from leadingV in LeadingV.Optional()
               from major in BuildNumber
@@ -79,20 +83,21 @@ namespace SemVer.NET
                               from patchValue in BuildNumber
                               select patchValue
                             ).Optional()
-              from preRelease in ( from start in StartPreRelease
+              from preRelease in ( from start in StartPreRelease.Or( Letter )
                                    from preRelIds in DotSeparatedReleaseIdentifiers
-                                   select preRelIds
+                                   select new VersionQualifier( start, preRelIds )
                                  ).Optional()
               from buildMetadata in ( from start in StartBuild
                                       from buildIds in DotSeparatedBuildIdentifiers
-                                      select buildIds
+                                      select new VersionQualifier( start, buildIds )
                                     ).Optional()
               select new ParseResult( leadingV.IsDefined ? new char?( leadingV.Get() ) : null
                                     , major
                                     , minor
                                     , patch.GetOrElse( string.Empty )
-                                    , preRelease.GetOrElse( Enumerable.Empty<string>( ) )
-                                    , buildMetadata.GetOrElse( Enumerable.Empty<string>( ) )
+                                    , preRelease.GetOrDefault( )
+                                    , buildMetadata.GetOrDefault( )
                                     );
     }
+
 }

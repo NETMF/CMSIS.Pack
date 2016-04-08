@@ -1,42 +1,31 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using SemVer.NET;
 using Sprache;
 
 namespace CMSIS.Pack.PackDescription
 {
     [Serializable( )]
-    public class DebugVarsType {
-    
-        private string configfileField;
-    
-        private string versionField;
-    
-        private XmlAttribute[] anyAttrField;
-    
-        private string valueField;
-    
+    public class DebugVarsType
+    {
         /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string configfile {
-            get {
-                return configfileField;
-            }
-            set {
-                configfileField = value;
+        [XmlAttribute( "configfile", Form=System.Xml.Schema.XmlSchemaForm.Qualified )]
+        public string ConfigFile { get; set; }
+
+        [XmlAttribute( "version", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
+        [System.ComponentModel.EditorBrowsable( System.ComponentModel.EditorBrowsableState.Never )]
+        public string RawVersionString
+        {
+            get { return Version.ToString( ); }
+            set
+            {
+                Version = VersionParser.Parse( value );
             }
         }
-    
-        /// <remarks/>
-        [XmlAttribute( Form=System.Xml.Schema.XmlSchemaForm.Qualified)]
-        public string version {
-            get {
-                return versionField;
-            }
-            set {
-                versionField = value;
-            }
-        }
+
+        [XmlIgnore]
+        public SemanticVersion Version { get; set; }
 
         /// <remarks/>
         [XmlAttribute( "Pname", Form = System.Xml.Schema.XmlSchemaForm.Qualified )]
@@ -49,24 +38,10 @@ namespace CMSIS.Pack.PackDescription
 
         /// <remarks/>
         [XmlAnyAttribute( )]
-        public XmlAttribute[ ] AnyAttr {
-            get {
-                return anyAttrField;
-            }
-            set {
-                anyAttrField = value;
-            }
-        }
+        public XmlAttribute[ ] AnyAttr { get; set; }
     
         /// <remarks/>
         [XmlText( )]
-        public string Value {
-            get {
-                return valueField;
-            }
-            set {
-                valueField = value;
-            }
-        }
+        public string Value { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SemVer.NET;
 
@@ -126,39 +127,40 @@ namespace UnitTests
             VerifyToStringReverseParse( ver );
         }
 
-        [TestMethod]
-        public void StaticParseDefaultPatchTest()
-        {
-            var ver = SemanticVersion.Parse( "0.1-alpha.beta+foo-bar.baz", ParseOptions.PatchOptional );
-            Assert.AreEqual( 0, ver.Major );
-            Assert.AreEqual( 1, ver.Minor );
-            Assert.AreEqual( 0, ver.Patch );
-            Assert.IsTrue( ver.IsValid );
-            Assert.IsTrue( ver.IsDevelopment );
-            Assert.IsTrue( ver.IsPrerelease );
-            Assert.AreEqual( 2, ver.PreReleaseParts.Count );
-            Assert.AreEqual( "alpha", ver.PreReleaseParts[ 0 ] );
-            Assert.AreEqual( "beta", ver.PreReleaseParts[ 1 ] );
-            Assert.AreEqual( 2, ver.BuildMetadata.Count );
-            Assert.AreEqual( "foo-bar", ver.BuildMetadata[ 0 ] );
-            Assert.AreEqual( "baz", ver.BuildMetadata[ 1 ] );
-            Assert.AreEqual( "0.1.0-alpha.beta+foo-bar.baz", ver.ToString( ) );
-            VerifyToStringReverseParse( ver );
-        }
+        // TODO: move to CMSIS-Pack specific tests
+        //[TestMethod]
+        //public void StaticParseDefaultPatchTest()
+        //{
+        //    var ver = SemanticVersion.Parse( "0.1-alpha.beta+foo-bar.baz", ParseOptions.PatchOptional );
+        //    Assert.AreEqual( 0, ver.Major );
+        //    Assert.AreEqual( 1, ver.Minor );
+        //    Assert.AreEqual( 0, ver.Patch );
+        //    Assert.IsTrue( ver.IsValid );
+        //    Assert.IsTrue( ver.IsDevelopment );
+        //    Assert.IsTrue( ver.IsPrerelease );
+        //    Assert.AreEqual( 2, ver.PreReleaseParts.Count );
+        //    Assert.AreEqual( "alpha", ver.PreReleaseParts[ 0 ] );
+        //    Assert.AreEqual( "beta", ver.PreReleaseParts[ 1 ] );
+        //    Assert.AreEqual( 2, ver.BuildMetadata.Count );
+        //    Assert.AreEqual( "foo-bar", ver.BuildMetadata[ 0 ] );
+        //    Assert.AreEqual( "baz", ver.BuildMetadata[ 1 ] );
+        //    Assert.AreEqual( "0.1.0-alpha.beta+foo-bar.baz", ver.ToString( ) );
+        //    VerifyToStringReverseParse( ver );
+        //}
 
-        [TestMethod]
-        public void StaticParseSimpleMajorMinorOnlyTest( )
-        {
-            var ver = SemanticVersion.Parse( "2.1", ParseOptions.PatchOptional );
-            Assert.AreEqual( 2, ver.Major );
-            Assert.AreEqual( 1, ver.Minor );
-            Assert.AreEqual( 0, ver.Patch );
-            Assert.IsTrue( ver.IsValid );
-            Assert.IsFalse( ver.IsDevelopment );
-            Assert.IsFalse( ver.IsPrerelease );
-            Assert.AreEqual( 0, ver.PreReleaseParts.Count );
-            VerifyToStringReverseParse( ver );
-        }
+        //[TestMethod]
+        //public void StaticParseSimpleMajorMinorOnlyTest( )
+        //{
+        //    var ver = SemanticVersion.Parse( "2.1", ParseOptions.PatchOptional );
+        //    Assert.AreEqual( 2, ver.Major );
+        //    Assert.AreEqual( 1, ver.Minor );
+        //    Assert.AreEqual( 0, ver.Patch );
+        //    Assert.IsTrue( ver.IsValid );
+        //    Assert.IsFalse( ver.IsDevelopment );
+        //    Assert.IsFalse( ver.IsPrerelease );
+        //    Assert.AreEqual( 0, ver.PreReleaseParts.Count );
+        //    VerifyToStringReverseParse( ver );
+        //}
 
         [TestMethod]
         [ExpectedException( typeof( FormatException ))]
@@ -170,7 +172,7 @@ namespace UnitTests
         [TestMethod]
         public void StaticParseNumericIdentifier()
         {
-            var ver = SemanticVersion.Parse( "2.0.1-2.alpha", ParseOptions.PatchOptional );
+            var ver = SemanticVersion.Parse( "2.0.1-2.alpha" );
             Assert.AreEqual( 2, ver.Major );
             Assert.AreEqual( 0, ver.Minor );
             Assert.AreEqual( 1, ver.Patch );

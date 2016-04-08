@@ -3,6 +3,19 @@ using System.Collections.Generic;
 
 namespace SemVer.NET
 {
+    /// <summary>Parse result of a Version Prerelease or build qualifier</summary>
+    public class VersionQualifier
+    {
+        public VersionQualifier( char leadingChar, IEnumerable<string> identifiers)
+        {
+            LeadingChar = leadingChar;
+            Identifiers = identifiers;
+        }
+
+        public char LeadingChar { get; }
+        public IEnumerable<string> Identifiers { get; }
+    }
+
     /// <summary>Contains the results of parsing a Semantic version string</summary>
     /// <remarks>
     /// <para>In order to support variations on Semantic versions as well as gracefully
@@ -27,8 +40,8 @@ namespace SemVer.NET
                           , string major
                           , string minor
                           , string patch
-                          , IEnumerable<string> prereleaseParts
-                          , IEnumerable<string> buildParts
+                          , VersionQualifier prereleaseParts
+                          , VersionQualifier buildParts
                           )
         {
             if( major == null )
@@ -39,12 +52,6 @@ namespace SemVer.NET
 
             if( patch == null )
                 throw new ArgumentNullException( nameof( patch ) );
-
-            if( prereleaseParts == null )
-                throw new ArgumentNullException( nameof( prereleaseParts ) );
-
-            if( buildParts == null )
-                throw new ArgumentNullException( nameof( buildParts ) );
 
             LeadingV = leadingV;
             Major = major;
@@ -83,9 +90,9 @@ namespace SemVer.NET
         public string Patch { get; }
 
         /// <summary>Gets a collection of prerelease identifier strings</summary>
-        public IEnumerable<string> Prerelease { get; }
+        public VersionQualifier Prerelease { get; }
         
         /// <summary>Gets a collection of the build metadata identifier strings</summary>
-        public IEnumerable<string> BuildMetadata { get; }
+        public VersionQualifier BuildMetadata { get; }
     }
 }

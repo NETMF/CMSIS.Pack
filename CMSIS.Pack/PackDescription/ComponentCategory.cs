@@ -39,7 +39,7 @@ namespace CMSIS.Pack.PackDescription
         public string RawCversionString
         {
             get { return Version.ToString(); }
-            set { Version = SemanticVersion.Parse( value ); }
+            set { Version = VersionParser.Parse( value ); }
         }
 
         [XmlIgnore]
@@ -51,7 +51,7 @@ namespace CMSIS.Pack.PackDescription
         public string RawCapiversionString
         {
             get { return ApiVersion.ToString(); }
-            set { ApiVersion = SemanticVersion.Parse( value ); }
+            set { ApiVersion = VersionParser.Parse( value ); }
         }
 
         [XmlIgnore]
