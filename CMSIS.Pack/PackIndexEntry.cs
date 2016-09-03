@@ -87,10 +87,13 @@ namespace CMSIS.Pack
         /// <returns>string containing the XML content of the description</returns>
         public async Task<string> GetPackageDescriptionDocumentAsync()
         {
-            using( var client = new HttpClient( ) )
+            using( var client = new HttpClient( ) { BaseAddress = Url } )
+            using( var response = await client.GetAsync( PdscName ) )
             {
-                client.BaseAddress = Url;
-                return await client.GetStringAsync( PdscName );
+                if( response.StatusCode != System.Net.HttpStatusCode.OK )
+                    return null;
+
+                return await response.Content.ReadAsStringAsync( );
             }
         }
 
@@ -99,6 +102,9 @@ namespace CMSIS.Pack
         public async Task<Package> GetPackageDescriptionAsync( )
         {
             var xml = await GetPackageDescriptionDocumentAsync( );
+            if( string.IsNullOrWhiteSpace( xml ) )
+                return null;
+
             return await Package.ParseAsync( xml );
         }
 

@@ -215,6 +215,9 @@ namespace CMSIS.Pack.PackDescription
         [XmlEnum( "Milandr:99" )]
         Milandr99,
 
+        [XmlEnum( "MindMotion:132" )]
+        MindMotion132,
+
         /// <remarks/>
         [XmlEnum( "NetSilicon:67" )]
         NetSilicon67,
@@ -283,6 +286,9 @@ namespace CMSIS.Pack.PackDescription
         [XmlEnum( "Texas Instruments:16" )]
         TexasInstruments16,
 
+        [XmlEnum( "TexasInstruments:16" )]
+        TexasInstruments16_2,
+
         /// <remarks/>
         [XmlEnum( "Toshiba:92" )]
         Toshiba92,
@@ -302,6 +308,9 @@ namespace CMSIS.Pack.PackDescription
         /// <remarks/>
         [XmlEnum( "NXP (founded by Philips):11" )]
         NXPfoundedbyPhilips11,
+
+        [XmlEnum("Zilog:89")]
+        Zilog89,
     }
 
     /// <remarks/>
@@ -395,7 +404,14 @@ namespace CMSIS.Pack.PackDescription
         /// <remarks/>
         [XmlEnum( "Cortex-A72")]
         CortexA72,
-    
+
+        #region Added in CMSIS-Pack v5.0.0
+        [XmlEnum]
+        ARMV8MBL,
+
+        [XmlEnum]
+        ARMV8MML,
+        #endregion
         /// <remarks/>
         other,
     }

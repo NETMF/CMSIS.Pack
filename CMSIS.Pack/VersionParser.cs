@@ -11,8 +11,8 @@ namespace CMSIS.Pack
     // Deviations from the official spec are:
     // 1) Trailing 0s on Minor and Patch are ignored
     // 2) Patch is optional, if not present a default of 0 is assumed
-    // 3) The hyphen prerelease delimiter is optional if the first
-    //    character of the prerelease identifier is a letter
+    // 3) The hyphen pre-release delimiter is optional if the first
+    //    character of the pre-release identifier is a letter
     //
     // This utility class provides for relaxed parsing to generate
     // a full SemanticVersion that, when converted back to a string

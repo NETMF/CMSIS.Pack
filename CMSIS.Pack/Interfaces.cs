@@ -10,6 +10,7 @@ namespace CMSIS.Pack
     {
         AvailableForDownload,
         Downloading,
+        NotFoundOnServer,
         Downloaded,
         Installing,
         Installed,
@@ -68,9 +69,9 @@ namespace CMSIS.Pack
         PackInstallState InstallState { get; }
         IRepository Repository { get; }
 
-        Task Download( IProgress<FileDownloadProgress> progressSink );
-        
-        Task InstallPack( IProgress<PackInstallProgress> progressSink );
+        Task DownloadAsync( IProgress<FileDownloadProgress> progressSink );
+
+        Task InstallPackAsync( IProgress<PackInstallProgress> progressSink );
     }
 
     public enum RepositoryState
@@ -87,6 +88,7 @@ namespace CMSIS.Pack
 
     /// <summary>Represents a remote repository and local store of the installed pack files</summary>
     public interface IRepository
+        : IDisposable
     {
         /// <summary>Location of the source of packs to download from</summary>
         Uri SourceUri { get; }

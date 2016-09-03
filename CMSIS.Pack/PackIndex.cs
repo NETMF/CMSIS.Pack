@@ -17,9 +17,6 @@ namespace CMSIS.Pack
     /// </remarks>
     public class PackIndex
     {
-        /// <summary>Default URI for the pack index</summary>
-        public const string DefaultIndexUriPath = "http://www.keil.com/pack/index.idx";
-
         public PackIndex( )
         {
         }
@@ -32,12 +29,6 @@ namespace CMSIS.Pack
         /// <summary>Enumeration of the Packs listed in the Index</summary>
         public IEnumerable<IPackIndexEntry> Packs => Packs_.AsReadOnly( );
         private readonly List<IPackIndexEntry> Packs_ = new List<IPackIndexEntry>();
-
-        /// <summary>Download and parse the index file from the Default location <see cref="DefaultIndexUriPath"/></summary>
-        /// <returns>Task for the Asynchronous operation</returns>
-        public Task LoadAsync( ) => LoadAsync( new Uri( DefaultIndexUriPath ) );
-
-        public Task LoadAsync( IProgress<FileDownloadProgress> progressSink ) => LoadAsync( new Uri( DefaultIndexUriPath ), progressSink );
 
         /// <summary>Download and parse the index asynchronously from a URL</summary>
         /// <param name="indexUrl">URL of the index file to download</param>
@@ -115,8 +106,7 @@ namespace CMSIS.Pack
                     , ConformanceLevel = ConformanceLevel.Fragment
                     };
 
-                using( var strm = new StringReader( indexContent ) )
-                using( var rdr = XmlReader.Create( strm, settings ) )
+                using( var rdr = XmlReader.Create( new StringReader( indexContent ), settings ) )
                 {
                     // Despite having an xml doc processing instruction the index file is *NOT*
                     // valid XML. It has multiple pdsc elements at the root, which is invalid

@@ -24,7 +24,7 @@ namespace CMSIS.Pack
 
         public IPackIndexEntry Details { get; }
 
-        public IRepository Repository { get; private set; }
+        public IRepository Repository { get; }
 
         public PackInstallState InstallState { get; private set; }
         
@@ -40,7 +40,19 @@ namespace CMSIS.Pack
 
         public async Task<string> GetPackageDescriptionDocumentAsync( )
         {
-            using( var strm = File.OpenText( Path.Combine( Repository.WebRoot, PdscName ) ) )
+            var path = Path.Combine( Repository.WebRoot, PdscName );
+            if( !File.Exists( path ) )
+            {
+                // download the PDSC file to the repo's .Web location
+                var retVal = await Details.GetPackageDescriptionDocumentAsync( );
+                if( !string.IsNullOrWhiteSpace( retVal ) )
+                {
+                    File.WriteAllText( path, retVal );
+                }
+                return retVal;
+            }
+
+            using( var strm = File.OpenText( path ) )
             {
                 return await strm.ReadToEndAsync( );
             }
@@ -49,10 +61,14 @@ namespace CMSIS.Pack
         public async Task<Package> GetPackageDescriptionAsync( )
         {
             string content = await GetPackageDescriptionDocumentAsync( );
+            if( string.IsNullOrWhiteSpace( content ) )
+            {
+                return null;
+            }
             return await Package.ParseAsync( content );
         }
 
-        public async Task Download( IProgress<FileDownloadProgress> progressSink )
+        public async Task DownloadAsync( IProgress<FileDownloadProgress> progressSink )
         {
             if( InstallState == PackInstallState.Downloaded )
                 return;
@@ -73,7 +89,7 @@ namespace CMSIS.Pack
             InstallState = PackInstallState.Downloaded;
         }
 
-        public async Task InstallPack( IProgress<PackInstallProgress> progressSink )
+        public async Task InstallPackAsync( IProgress<PackInstallProgress> progressSink )
         {
             if( InstallState == PackInstallState.Installed )
                 return;

@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="FileDownloadProgress.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="MDKRepositoryProvider.cs" />
     <Compile Include="PackDescription\AlgorithmType.cs" />
     <Compile Include="PackDescription\ApiType.cs" />
     <Compile Include="PackDescription\BoardFeature.cs" />
@@ -127,6 +128,9 @@
     <Compile Include="VersionParser.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="PackDescription\PACK.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

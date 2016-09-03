@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using CMSIS.Pack;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace NetmfPackInstaller
@@ -19,7 +20,7 @@ namespace NetmfPackInstaller
             if( DataContext != null )
                 return;
 
-            var viewModel = new PackRepositoryViewModel( );
+            var viewModel = new PackRepositoryViewModel( RepositoryProvider.Repository );
             DataContext = viewModel;
             await viewModel.LoadAsync( );
         }
@@ -35,5 +36,10 @@ namespace NetmfPackInstaller
             if( overflowGrid != null )
                 overflowGrid.Visibility = Visibility.Collapsed;
         }
+
+        // For now there is only one provider of repositories for an installed MDK
+        // eventually others may be supported if more third party tools start supporting
+        // the CMSIS-PACK format.
+        private IRepositoryProvider RepositoryProvider = new MDKRepositoryProvider( );
     }
 }

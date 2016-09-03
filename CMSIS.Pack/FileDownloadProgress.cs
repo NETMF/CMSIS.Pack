@@ -7,28 +7,22 @@ namespace CMSIS.Pack
     {
         public FileDownloadProgress( Uri source, TimeSpan elapsedTime, long sizeSoFar, long totalSize)
         {
-            SourceUrl_ = source;
-            ElapsedTime_ = elapsedTime;
-            SizeSoFar_ = sizeSoFar;
-            TotalSize_ = totalSize;
+            SourceUrl = source;
+            ElapsedTime = elapsedTime;
+            SizeSoFar = sizeSoFar;
+            TotalSize = totalSize;
         }
 
-        public double PercentComplete
-        {
-            get { return 100.0 * (double)SizeSoFar/(double)TotalSize; }
-        }
+        public double PercentComplete => 100.0 * SizeSoFar / TotalSize;
 
-        public bool IsCompleted { get { return SizeSoFar_ == -1 || TotalSize_ == -1; } }
-        public Uri SourceUrl { get { return SourceUrl_; } }
-        private readonly Uri SourceUrl_;
+        public bool IsCompleted => SizeSoFar == -1 || TotalSize == -1;
 
-        public TimeSpan ElapsedTime { get { return ElapsedTime_; } }
-        private readonly TimeSpan ElapsedTime_;
+        public Uri SourceUrl { get; }
 
-        public long SizeSoFar { get { return SizeSoFar_;  } }
-        private readonly long SizeSoFar_;
+        public TimeSpan ElapsedTime { get; }
 
-        public long TotalSize { get { return TotalSize_;  } }
-        private readonly long TotalSize_;
+        public long SizeSoFar { get; }
+
+        public long TotalSize { get; }
     }
 }

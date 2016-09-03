@@ -19,14 +19,12 @@ namespace NetmfPackInstaller
     public class PackRepositoryViewModel 
         : ViewModelBase
     {
-        public PackRepositoryViewModel()
+        public PackRepositoryViewModel( IRepository repository )
         {
-            // for now, just hard code location of local repository
-            // and use the default cloud URL
-            Repository = new PackRepository(@"c:\Keil_v5\ARM\Pack");
+            Repository = repository;
             State = LoadState.LoadingIndex;
             Packs = new ObservableCollection<PackReferenceViewModel>( );
-            RefreshIndexCommand_ = new RelayCommand( RefreshIndexAsync, CanRefreshIndex );
+            RefreshIndexCommand = new RelayCommand( RefreshIndexAsync, CanRefreshIndex );
         }
 
         internal async Task LoadAsync( )
@@ -44,15 +42,11 @@ namespace NetmfPackInstaller
             State = LoadState.Ready;
         }
 
-        public ICommand RefreshIndexCommand
-        {
-            get { return RefreshIndexCommand_; }
-        }
-        private readonly RelayCommand RefreshIndexCommand_;
+        public ICommand RefreshIndexCommand { get; }
 
-        public DateTime LastUpdated { get { return Repository.LastUpdatedTimeUTC.ToLocalTime(); } }
+        public DateTime LastUpdated => Repository.LastUpdatedTimeUTC.ToLocalTime( );
 
-        public ObservableCollection<PackReferenceViewModel> Packs { get; private set; }
+        public ObservableCollection<PackReferenceViewModel> Packs { get; }
 
         public LoadState State
         {
@@ -65,17 +59,14 @@ namespace NetmfPackInstaller
         }
         private LoadState State__;
 
-        private bool CanRefreshIndex( )
-        {
-            return State == LoadState.Ready;
-        }
+        private bool CanRefreshIndex( ) => State == LoadState.Ready;
 
         private async void RefreshIndexAsync( )
         {
             await Repository.UpdateLocalFromSourceAsync( );
         }
 
-        private readonly PackRepository Repository;
+        private readonly IRepository Repository;
         private readonly Dispatcher Dispatcher = Dispatcher.CurrentDispatcher;
     }
 }

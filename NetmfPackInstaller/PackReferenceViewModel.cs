@@ -11,6 +11,7 @@ namespace NetmfPackInstaller
     {
         Initialized,
         DownloadingPdsc,
+        PdscNotAvailable,
         Ready
     }
 
@@ -32,7 +33,7 @@ namespace NetmfPackInstaller
 
             // get the PDSC async, parse to get description
             PackageDescription = await PackageRef.GetPackageDescriptionAsync( );
-            State = PackReferenceState.Ready;
+            State = PackageDescription == null ? PackReferenceState.PdscNotAvailable : PackReferenceState.Ready;
         }
 
         public PackReferenceState State

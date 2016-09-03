@@ -16,6 +16,7 @@ namespace CMSIS.Pack
     /// </remarks>
     public class PackRepository
         : IRepository
+        , IDisposable
     {
         /// <summary>Constructs a new <see cref="PackRepository"/></summary>
         /// <param name="source">Uri of the source repository to download files from</param>
@@ -30,15 +31,18 @@ namespace CMSIS.Pack
             PackIdxWatcher.Changed += ( s, e ) => Updated( this, new RepositoryUpdateEventArgs( ) );
         }
 
-        /// <summary>Constructs a new repository backed by the specified local path and downloading from the <see cref="PackIndex.DefaultIndexUriPath"/> source Uri</summary>
-        /// <param name="localPath">Full path of the local repository</param>
-        public PackRepository( string localPath )
-            : this( new Uri( PackIndex.DefaultIndexUriPath ), localPath )
-        {
-        }
-
         /// <summary>Last time the repository's index was updated</summary>
-        public DateTime LastUpdatedTimeUTC => File.GetLastWriteTimeUtc( Path.Combine( LocalPath, "pack.idx" ) );
+        public DateTime LastUpdatedTimeUTC
+        {
+           get
+           {
+                var path = RepositoryIndexPath;
+                if( File.Exists( path ) )
+                    return File.GetLastWriteTimeUtc( RepositoryIndexPath );
+                else
+                    return new DateTime( );
+           }
+        }
 
         public string WebRoot { get; }
 
@@ -47,6 +51,10 @@ namespace CMSIS.Pack
         public Uri SourceUri { get; }
 
         public string LocalPath { get; }
+
+        public string RepositoryIndexPath => Path.Combine( LocalPath, "pack.idx" );
+
+        public string DownloadIndexPath => Path.Combine( WebRoot, "index.idx" );
 
         public event EventHandler<RepositoryUpdateEventArgs> Updated = delegate { };
 
@@ -69,17 +77,17 @@ namespace CMSIS.Pack
             Updated( this, new RepositoryUpdateEventArgs( RepositoryState.DownloadingIndex, null ) );
             Packs_ = new List<IRepositoryPackage>( );
             var index = new PackIndex( );
-            await index.LoadAsync( Path.Combine( WebRoot, "index.idx" ) );
+            await index.LoadAsync( DownloadIndexPath );
             foreach( var pack in index.Packs )
             {
-                var repositoryPack = new RepositoryPackage( this, pack, await GetInstallState( pack ) );
+                var repositoryPack = new RepositoryPackage( this, pack, await GetInstallStateAsync( pack ) );
                 Packs_.Add( repositoryPack );
             }
         }
 
         public Task UpdateLocalFromSourceAsync( ) => Task.FromResult<object>( null );
 
-        private Task<PackInstallState> GetInstallState( IPackIndexEntry pack )
+        private Task<PackInstallState> GetInstallStateAsync( IPackIndexEntry pack )
         {
             return Task.Run( ( ) =>
             {
@@ -95,5 +103,42 @@ namespace CMSIS.Pack
         }
 
         private readonly FileSystemWatcher PackIdxWatcher;
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose( bool disposing )
+        {
+            if( !disposedValue )
+            {
+                if( disposing )
+                {
+                    PackIdxWatcher.Dispose( );
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+#if PackRepository_HAS_FINALIZER
+        // ~PackRepository() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+#endif
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose( )
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose( true );
+
+#if PackRepository_HAS_FINALIZER
+            GC.SuppressFinalize(this);
+#endif
+        }
+#endregion
     }
 }
